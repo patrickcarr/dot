@@ -17,3 +17,4 @@ export PROMPT_COMMAND=prompt_command
 HISTSIZE=100000         # remember the last 100000 commands
 HISTCONTROL=ignoreboth  # ignoreboth is shorthand for ignorespace and ignoredups
 PS1='[\u@\h \W$(__git_ps1 " (%s)")]\$ '
+export EDITOR="emacsclient --alternate-editor zile"
