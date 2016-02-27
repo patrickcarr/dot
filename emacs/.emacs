@@ -59,32 +59,33 @@
 
 ;;;; UI
 (fset 'yes-or-no-p 'y-or-n-p)
+(setq find-file-visit-truename t)
 ;;;; TABBAR
 (require 'tabbar)
 (setq tabbar-use-images nil)
 ;; Add a buffer modification state indicator in the tab label, and place a
- ;; space around the label to make it looks less crowd.
- (defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
-   (setq ad-return-value
-         (if (and (buffer-modified-p (tabbar-tab-value tab))
-                  (buffer-file-name (tabbar-tab-value tab)))
-             (concat " + " (concat ad-return-value " "))
-           (concat " " (concat ad-return-value " ")))))
- 
- ;; Called each time the modification state of the buffer changed.
- (defun ztl-modification-state-change ()
-   (tabbar-set-template tabbar-current-tabset nil)
-   (tabbar-display-update))
- 
- ;; First-change-hook is called BEFORE the change is made.
- (defun ztl-on-buffer-modification ()
-   (set-buffer-modified-p t)
-   (ztl-modification-state-change))
- (add-hook 'after-save-hook 'ztl-modification-state-change)
- 
- ;; This doesn't work for revert, I don't know.
- ;;(add-hook 'after-revert-hook 'ztl-modification-state-change)
- (add-hook 'first-change-hook 'ztl-on-buffer-modification)
+;; space around the label to make it looks less crowd.
+(defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
+  (setq ad-return-value
+	(if (and (buffer-modified-p (tabbar-tab-value tab))
+		 (buffer-file-name (tabbar-tab-value tab)))
+	    (concat " + " (concat ad-return-value " "))
+	  (concat " " (concat ad-return-value " ")))))
+
+;; Called each time the modification state of the buffer changed.
+(defun ztl-modification-state-change ()
+  (tabbar-set-template tabbar-current-tabset nil)
+  (tabbar-display-update))
+
+;; First-change-hook is called BEFORE the change is made.
+(defun ztl-on-buffer-modification ()
+  (set-buffer-modified-p t)
+  (ztl-modification-state-change))
+(add-hook 'after-save-hook 'ztl-modification-state-change)
+
+;; This doesn't work for revert, I don't know.
+;;(add-hook 'after-revert-hook 'ztl-modification-state-change)
+(add-hook 'first-change-hook 'ztl-on-buffer-modification)
 ;; Group by directory
     (tabbar-mode t)
     (setq tabbar-cycle-scope 'tabs)
@@ -167,8 +168,7 @@
                               (interactive)
                               (scroll-up 1)))
   (defun track-mouse (e))
-  (setq mouse-sel-mode t)
-)
+  (setq mouse-sel-mode t))
 ;;; window sizing
 (require 'golden-ratio)
 (golden-ratio-mode 1)
@@ -301,7 +301,9 @@
       helm-imenu-fuzzy-match    t)
 (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 (setq helm-locate-command "mdfind -name %s %s")
-
+;;;; start the server
+(require 'server)
+(unless (server-running-p) (server-start))
 
 (provide '.emacs)
 ;;; .emacs ends here
