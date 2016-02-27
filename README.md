@@ -1,2 +1,3 @@
 # dot
-dotfiles
+dotfiles stow packages
+
