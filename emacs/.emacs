@@ -1,13 +1,13 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-02-17 22:02:28 cpc26>
+;Time-stamp: <2016-02-28 14:41:35 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 (package-initialize)
-
+(message "[✓]  Commencer CUSTOM")
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -43,11 +43,14 @@
 			 ("org" . "http://orgmode.org/elpa/")))
 ;;; Code:
 ;;;; OS FIXES
+(message "[✓]  Commencer OS FIXES")
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 (let ((default-directory  "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
 ;;;; BACKUPS and VERSIONING
+(message "[✓]  Commencer BACKUPS and VERSIONING")
+(add-hook 'before-save-hook 'time-stamp)
 ;; ========== Place Backup Files in Specific Directory ==========
 ;; Activer backup files.
 (setq make-backup-files t)
@@ -56,8 +59,8 @@
 ;; Save all backup file in this directory.
 (setq backup-directory-alist (quote ((".*" . "~/.emacs.d/backups"))))
 (setq delete-old-versions t)
-
 ;;;; UI
+(message "[✓]  Commencer UI")
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq find-file-visit-truename t)
 ;;; MODE LINE
@@ -65,6 +68,7 @@
 (setq sml/theme 'light)
 (sml/setup)
 ;;;; TABBAR
+(message "[✓]  Commencer TABBAR")
 (require 'tabbar)
 (setq tabbar-use-images nil)
 ;; Add a buffer modification state indicator in the tab label, and place a
@@ -114,6 +118,7 @@
 (add-hook 'find-file-hook (lambda () (linum-mode 1)))
 (setq linum-format "%d ")
 ;;; Tranparency
+(message "[✓]  Commencer TRANSPARENCY")
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
 (set-frame-parameter (selected-frame) 'alpha '(85 50))
 (add-to-list 'default-frame-alist '(alpha 85 50))
@@ -133,6 +138,7 @@
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
 ;;; adventures in scrolling
+(message "[✓]  Commencer MOUSE et SCROLL")
 (setq mouse-wheel-scroll-amount '(0.07)) ;; one line at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
@@ -177,6 +183,7 @@
 	compile-command))
 (global-hl-line-mode 1)
 ;;;; BUFFERS
+(message "[✓]  Commencer BUFFERS")
 (require 'ibuffer)
 (require 'ibuffer-git)
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
@@ -214,20 +221,33 @@
 (require 'help+)
 (require 'help-fns+)
 (require 'help-mode+)
+;;;; SR-Speedbar
+(message "[✓]  Commencer SPEEDBAR")
+(which-function-mode 1)
+(require 'sr-speedbar)
+(speedbar-add-supported-extension ".lisp")
+(speedbar-add-supported-extension ".js")
+(add-to-list 'speedbar-fetch-etags-parse-list
+             '("\\.js" . speedbar-parse-c-or-c++tag))
+(setq speedbar-show-unknown-files t)
+(setq speedbar-directory-unshown-regexp "^$")
+(global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 ;;;; // END UI
 ;;;; ESHELL
+(message "[✓]  Commencer ESHELL")
 (with-eval-after-load "esh-opt"
   (autoload 'epe-theme-lambda "eshell-prompt-extras")
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-lambda))
 (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode)
 ;;;; ORG
+(message "[✓]  Commencer ORG")
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-
+;;; info et doc
+(message "[✓]  Commencer DOC")
 ;;;; INFO
 (require 'info+)
-
 ;;;; ELDOC
 (require 'eldoc)
 (require 'css-eldoc)
@@ -240,6 +260,7 @@
 (add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
 
 ;;;; COMMON LISP
+(message "[✓]  Commencer LISP")
 (show-paren-mode 1)
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
@@ -248,6 +269,7 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; AucTeX
+(message "[✓]  Commencer TEX")
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
@@ -288,6 +310,7 @@
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
 
 ;;; HELM
+(message "[✓]  Commencer HELM")
 ;; https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
 ;; 
 ;; http://tuhdo.github.io/helm-intro.html
@@ -321,7 +344,7 @@
   (defun track-mouse (e))
   (setq mouse-sel-mode t))))
 
-
+(message "[✓]  Commencer SERVER")
 (require 'server)
 (add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)
 (unless (server-running-p) (server-start))
@@ -329,3 +352,4 @@
 (provide '.emacs)
 ;;; .emacs ends here
 (put 'downcase-region 'disabled nil)
+(message "[✓]  Commencer EMACS")
