@@ -140,23 +140,6 @@
 ;; (setq auto-window-vscroll nil)
 ;; (global-set-key (kbd "<C-mouse-4>") 'scroll-down-line)
 ;; (global-set-key (kbd "<C-mouse-5>") 'scroll-up-line)
-;; Enable mouse support
-(defun cpc26/xmouse-enable (frame)
-  "Detect if in terminal then active xterm mouse and scroll.  arg is FRAME."
-    (select-frame frame)
-    (if (window-system frame)
-	(progn
-	   (require 'mouse)
-  (xterm-mouse-mode t)
-  (global-set-key [mouse-4] (lambda ()
-                              (interactive)
-                              (scroll-down 1)))
-  (global-set-key [mouse-5] (lambda ()
-                              (interactive)
-                              (scroll-up 1)))
-  (defun track-mouse (e))
-  (setq mouse-sel-mode t))))
-(add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)
 ;; if started emacs -nw
 (unless window-system
   (require 'mouse)
@@ -302,7 +285,25 @@
 (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 (setq helm-locate-command "mdfind -name %s %s")
 ;;;; start the server
+;; Enable mouse support
+(defun cpc26/xmouse-enable (frame)
+  "Active xterm mouse and scroll from make FRAME."
+  (if (display-graphic-p)
+      (progn
+  (require 'mouse)
+  (xterm-mouse-mode t)
+  (global-set-key [mouse-4] (lambda ()
+			      (interactive)
+			      (scroll-down 1)))
+  (global-set-key [mouse-5] (lambda ()
+			      (interactive)
+			      (scroll-up 1)))
+  (defun track-mouse (e))
+  (setq mouse-sel-mode t))))
+
+
 (require 'server)
+(add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)
 (unless (server-running-p) (server-start))
 
 (provide '.emacs)
