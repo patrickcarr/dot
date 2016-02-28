@@ -1,5 +1,8 @@
 if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
 # Interactive Shell Specific
+if [ -f ~/.bash_aliases ]; then
+. ~/.bash_aliases
+fi
 # GIT
 . ~/.git-completion.bash
 . ~/bin/git-prompt.sh
