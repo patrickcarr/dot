@@ -23,3 +23,9 @@ export PATH=/usr/local/go/bin:$PATH
 # POSTGRES
 # DATA /Users/cpc26/Library/Application Support/Postgres/var-9.5
 export PATH=$PATH:/Applications/Postgres.app/Contents/Versions/latest/bin
+
+PATH="/Users/cpc26/perl5/bin${PATH+:}${PATH}"; export PATH;
+PERL5LIB="/Users/cpc26/perl5/lib/perl5${PERL5LIB+:}${PERL5LIB}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/Users/cpc26/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/Users/cpc26/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/Users/cpc26/perl5"; export PERL_MM_OPT;

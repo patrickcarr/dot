@@ -18,7 +18,7 @@
  '(indicate-buffer-boundaries (quote left))
  '(package-selected-packages
    (quote
-    (smart-mode-line-powerline-theme smart-mode-line eshell-fringe-status eshell-prompt-extras org-plus-contrib org helm-sage sr-speedbar visual-regexp web-beautify help-mode+ help-fns+ help+ magit eldoc-extension css-eldoc ibuffer-tramp ibuffer-vc ibuffer-projectile ibuffer-git gopher auctex tern exec-path-from-shell dired+ helm-swoop helm-projectile helm-package helm-orgcard helm-make helm-ls-git helm-fuzzier helm-flymake helm-flycheck helm-emmet helm-css-scss helm-ag helm tabbar golden-ratio-scroll-screen golden-ratio org-bullets leuven-theme info+)))
+    (rainbow-blocks rainbow-delimiters rainbow-mode smart-mode-line-powerline-theme smart-mode-line eshell-fringe-status eshell-prompt-extras org-plus-contrib org helm-sage sr-speedbar visual-regexp web-beautify help-mode+ help-fns+ help+ magit eldoc-extension css-eldoc ibuffer-tramp ibuffer-vc ibuffer-projectile ibuffer-git gopher auctex tern exec-path-from-shell dired+ helm-swoop helm-projectile helm-package helm-orgcard helm-make helm-ls-git helm-fuzzier helm-flymake helm-flycheck helm-emmet helm-css-scss helm-ag helm tabbar golden-ratio-scroll-screen golden-ratio org-bullets leuven-theme info+)))
  '(size-indication-mode t)
  '(tool-bar-mode nil))
 (custom-set-faces

@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-02-28 14:53:44 cpc26>
+;Time-stamp: <2016-03-07 21:31:28 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -241,6 +241,7 @@
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
 
 ;;;; FLYCHECK
+(require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; AucTeX
@@ -302,7 +303,17 @@
       helm-imenu-fuzzy-match    t)
 (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 (setq helm-locate-command "mdfind -name %s %s")
-;;;; start the server
+;;;; litteraire
+(flycheck-define-checker proselint
+  "A linter for prose."
+  :command ("proselint" source-inplace)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": "
+        (id (one-or-more (not (any " "))))
+        (message) line-end))
+  :modes (text-mode markdown-mode gfm-mode))
+
+(add-to-list 'flycheck-checkers 'proselint)
 ;; Enable mouse support
 (defun cpc26/xmouse-enable (frame)
   "Active xterm mouse and scroll from make FRAME."
@@ -318,7 +329,7 @@
 			      (scroll-up 1)))
   (defun track-mouse (e))
   (setq mouse-sel-mode t))))
-
+;;;; start the server
 (message "[✓]  Commencer SERVER")
 (require 'server)
 (add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)
@@ -328,3 +339,4 @@
 ;;; .emacs ends here
 (put 'downcase-region 'disabled nil)
 (message "[✓]  Commencer EMACS")
+(put 'upcase-region 'disabled nil)
