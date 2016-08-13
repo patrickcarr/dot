@@ -1,0 +1,17 @@
+# This is an example resource file for rTorrent. Copy to
+# ~/.rtorrent.rc and enable/modify the options as needed. Remember to
+# uncomment the options you wish to enable.
+
+# Maximum number of simultanious uploads per torrent.
+max_uploads = 5
+# Global upload and download rate in KiB. "0" for unlimited.
+download_rate = 0
+upload_rate = 10
+
+# Default directory to save the downloaded torrents.
+directory = ./incoming
+
+# Watch a directory for new torrents, and stop those that have been
+# deleted.
+schedule = watch_directory,5,5,load_start=./watch/*.torrent
+#schedule = untied_directory,5,5,stop_untied=
