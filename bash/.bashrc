@@ -14,6 +14,9 @@ export GHC_DOT_APP="/Applications/ghc-7.10.2.app"
 if [ -d "$GHC_DOT_APP" ]; then
   export PATH="${HOME}/.local/bin:${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
 fi
+# haskell stack
+export PATH="/Users/cpc26/.stack/programs/x86_64-osx/ghc-7.10.2/bin:${PATH}"
+eval "$(stack --bash-completion-script stack)"
 # Add /usr/local to PATH
 export PATH="/usr/local/bin:${PATH}"
 # google depot tools
