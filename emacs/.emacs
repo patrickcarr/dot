@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-08-16 08:58:51 cpc26>
+;Time-stamp: <2016-09-25 20:49:42 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -141,6 +141,8 @@
 (require 'golden-ratio)
 (golden-ratio-mode 1)
 (require 'golden-ratio-scroll-screen)
+;;; autocomplete
+(ac-config-default)
 ;;; state and histories
 (desktop-save-mode 1)
 (require 'recentf)
@@ -157,6 +159,8 @@
         regexp-search-ring
 	compile-command))
 (global-hl-line-mode 1)
+;;;; BOOKMARKS+
+(require 'bookmark+)
 ;;;; BUFFERS
 (message "[✓]  Commencer BUFFERS")
 (require 'ibuffer)
@@ -310,6 +314,12 @@ and then calling `my-dired-kill-spawn' twice."
 (message "[✓]  Commencer ORG")
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+;; Set to the location of your Org files on your local system
+(setq org-directory "~/org")
+;; Set to the name of the file where new notes will be stored
+(setq org-mobile-inbox-for-pull "~/org/flagged.org")
+;; Set to <your Dropbox root directory>/MobileOrg.
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 ;;; info et doc
 (message "[✓]  Commencer DOC")
 ;;;; INFO
@@ -330,8 +340,32 @@ and then calling `my-dired-kill-spawn' twice."
 (show-paren-mode 1)
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
+(setq slime-contribs '(slime-fancy))
 ;;;; slime-scratch
 (setq slime-scratch-file (expand-file-name "~/.slime/slime-scratch.lisp"))
+;;;;  slime-auto complete
+(require 'ac-slime)
+(add-hook 'slime-mode-hook 'set-up-slime-ac)
+(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'slime-repl-mode))
+;;;; fuzzy
+(require 'slime-fuzzy)
+(global-set-key (kbd "<tab>") 'slime-fuzzy-complete-symbol)
+;;;; slime-mode hook
+;; (add-hook 'slime-mode-hook
+;;           (lambda ()
+;;             (unless (slime-connected-p)
+;;               (save-excursion (slime)))))
+;; (add-hook 'slime-mode-hook
+;;     (lambda ()
+;;       (set-variable lisp-indent-function 'common-lisp-indent-function)
+;;       (slime-define-key "\r" 'newline-and-indent)
+;;       (slime-define-key [(control ?/)] 'backward-up-list)
+;;       (slime-define-key [(control ?=)] 'down-list)
+;;       (slime-define-key [tab] 'slime-indent-and-complete-symbol)
+;;       (slime-define-key [(control c) tab] 'slime-complete-form)
+;;       (slime-define-key [f13] 'slime-cheat-sheet)))
 ;;;; FLYCHECK
 (require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
