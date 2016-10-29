@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-09-25 20:49:42 cpc26>
+;Time-stamp: <2016-10-27 22:13:35 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -335,9 +335,16 @@ and then calling `my-dired-kill-spawn' twice."
 (add-hook 'css-mode-hook 'turn-on-css-eldoc)
 (add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
 
-;;;; COMMON LISP
+;;;; LISPS
 (message "[✓]  Commencer LISP")
 (show-paren-mode 1)
+;;;; GUILE GEISER SCHEME
+(require 'ac-geiser)
+(add-hook 'geiser-mode-hook 'ac-geiser-setup)
+(add-hook 'geiser-repl-mode-hook 'ac-geiser-setup)
+(eval-after-load "auto-complete"
+  '(add-to-list 'ac-modes 'geiser-repl-mode))
+;;;; COMMON LISP
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
 (setq slime-contribs '(slime-fancy))
