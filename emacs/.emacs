@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-10-27 22:13:35 cpc26>
+;Time-stamp: <2016-11-17 19:59:56 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -373,6 +373,9 @@ and then calling `my-dired-kill-spawn' twice."
 ;;       (slime-define-key [tab] 'slime-indent-and-complete-symbol)
 ;;       (slime-define-key [(control c) tab] 'slime-complete-form)
 ;;       (slime-define-key [f13] 'slime-cheat-sheet)))
+;;;; CLIPS
+(require 'clips-mode)
+(setq inferior-clips-program "clips")
 ;;;; FLYCHECK
 (require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
