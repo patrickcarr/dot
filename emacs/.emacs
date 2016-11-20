@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-11-17 19:59:56 cpc26>
+;Time-stamp: <2016-11-19 19:57:00 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -334,7 +334,13 @@ and then calling `my-dired-kill-spawn' twice."
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'css-mode-hook 'turn-on-css-eldoc)
 (add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
-
+;;;; REGEX
+(require 'foreign-regexp)
+(custom-set-variables
+   '(foreign-regexp/regexp-type 'javascript) ;; Choose your taste of foreign regexp
+                                       ;; from 'perl, 'ruby, 'javascript or
+                                       ;; 'python.
+   '(reb-re-syntax 'foreign-regexp))   ;; Tell re-builder to use foreign regexp.
 ;;;; LISPS
 (message "[✓]  Commencer LISP")
 (show-paren-mode 1)
