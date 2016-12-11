@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-11-19 19:57:00 cpc26>
+;Time-stamp: <2016-12-04 22:30:07 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -291,6 +291,13 @@ and then calling `my-dired-kill-spawn' twice."
   (define-key dired-mode-map [down] 'my-dired-next-line)
   (define-key dired-mode-map [up] 'my-dired-previous-line)
   (define-key dired-mode-map (kbd "SPC") 'my-dired-quicklook)))
+;;;; Multiple Cursors
+(message "[✓]  Commencer BUFFERS - multiple cursors")
+(require 'multiple-cursors)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 ;;;; SR-Speedbar
 (message "[✓]  Commencer SPEEDBAR")
 (which-function-mode 1)
@@ -382,10 +389,13 @@ and then calling `my-dired-kill-spawn' twice."
 ;;;; CLIPS
 (require 'clips-mode)
 (setq inferior-clips-program "clips")
+;;;; ESS-R
+(require 'ess-site)
+(setq ess-eval-visibly nil)
+(define-key ac-completing-map (kbd "M-h") 'ac-quick-help)
 ;;;; FLYCHECK
 (require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
-
 ;; AucTeX
 (message "[✓]  Commencer TEX")
 (setq TeX-auto-save t)
