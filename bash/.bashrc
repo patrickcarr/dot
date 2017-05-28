@@ -50,6 +50,8 @@ PERL_LOCAL_LIB_ROOT="/Users/cpc26/perl5${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_
 PERL_MB_OPT="--install_base \"/Users/cpc26/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/Users/cpc26/perl5"; export PERL_MM_OPT;
 
+# added by Anaconda2 4.3.1 installer
+export PATH="/Users/cpc26/anaconda2/bin:$PATH"
 
 source ~/.xsh
 

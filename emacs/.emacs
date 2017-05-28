@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2016-12-04 22:30:07 cpc26>
+;Time-stamp: <2017-05-28 16:12:57 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -12,18 +12,27 @@
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
 ;;;; elpa
+;;;; ................................................................................
 (setq package-archives '(("gnu" . "https://elpa.gnu.org/packages/")
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
 			 ("org" . "http://orgmode.org/elpa/")))
 ;;; Code:
 ;;;; OS FIXES
+;;;; ................................................................................
 (message "[✓]  Commencer OS FIXES")
 (when (memq window-system '(mac ns))
   (exec-path-from-shell-initialize))
 (let ((default-directory  "~/.emacs.d/lisp/"))
   (normal-top-level-add-subdirs-to-load-path))
+(message "[✓]  OS X")
+;;launchctl-el
+;; Emacs recognize plist files as XML files:
+(add-to-list 'auto-mode-alist '("\\.plist$" . nxml-mode))
+; DEBIAN
+(message "[✓]  DEBIAN")
 ;;;; BACKUPS and VERSIONING
+;;;; ................................................................................
 (message "[✓]  Commencer BACKUPS and VERSIONING")
 (add-hook 'before-save-hook 'time-stamp)
 ;; ========== Place Backup Files in Specific Directory ==========
@@ -35,7 +44,16 @@
 (setq backup-directory-alist (quote ((".*" . "~/.emacs.d/backups"))))
 (setq delete-old-versions t)
 ;;;; UI
+;;;; ................................................................................
 (message "[✓]  Commencer UI")
+;;;; BELL - pas le BELL
+(defun my-terminal-visible-bell ()
+   "Un effet de cloche visuel plus amical"
+   (invert-face 'mode-line)
+   (run-with-timer 0.1 nil 'invert-face 'mode-line))
+(setq visible-bell nil
+      ring-bell-function 'my-terminal-visible-bell)
+;;; courte
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq find-file-visit-truename t)
 ;;; MODE LINE
@@ -67,7 +85,7 @@
 (add-hook 'after-save-hook 'ztl-modification-state-change)
 
 ;; This doesn't work for revert, I don't know.
-;;(add-hook 'after-revert-hook 'ztl-modification-state-change)
+(add-hook 'after-revert-hook 'ztl-modification-state-change)
 (add-hook 'first-change-hook 'ztl-on-buffer-modification)
 ;; Group by directory
     (tabbar-mode t)
@@ -113,6 +131,7 @@
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
 ;;; adventures in scrolling
+;; Enable mouse support
 (message "[✓]  Commencer MOUSE et SCROLL")
 (setq mouse-wheel-scroll-amount '(0.07)) ;; one line at a time
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
@@ -137,6 +156,20 @@
                               (scroll-up 1)))
   (defun track-mouse (e))
   (setq mouse-sel-mode t))
+(defun cpc26/xmouse-enable (frame)
+  "Active xterm mouse and scroll from make FRAME."
+  (if (display-graphic-p)
+      (progn
+  (require 'mouse)
+  (xterm-mouse-mode t)
+  (global-set-key [mouse-4] (lambda ()
+                              (interactive)
+                              (scroll-down 1)))
+  (global-set-key [mouse-5] (lambda ()
+                              (interactive)
+                              (scroll-up 1)))
+  (defun track-mouse (e))
+  (setq mouse-sel-mode t))))
 ;;; window sizing
 (require 'golden-ratio)
 (golden-ratio-mode 1)
@@ -159,6 +192,10 @@
         regexp-search-ring
 	compile-command))
 (global-hl-line-mode 1)
+;;;; FLYCHECK
+(message "[✓]  Commencer FLYCHECK")
+(require 'flycheck)
+(add-hook 'after-init-hook #'global-flycheck-mode)
 ;;;; BOOKMARKS+
 (require 'bookmark+)
 ;;;; BUFFERS
@@ -166,8 +203,11 @@
 (require 'ibuffer)
 (require 'ibuffer-git)
 (defalias 'list-buffers 'ibuffer) ; make ibuffer default
+(setq ibuffer-default-sorting-mode 'major-mode)
+;;;					
 (add-hook 'ibuffer-hook
 	  (lambda ()
+	    (ibuffer-auto-mode 1)
 	    (ibuffer-projectile-set-filter-groups)
 	    (ibuffer-vc-set-filter-groups-by-vc-root)
 	    (unless (eq ibuffer-sorting-mode 'alphabetic)
@@ -194,12 +234,27 @@
       " "
       (mode 16 16 :left :elide)
       " " filename-and-process)))
-;;; DIRED
-(require 'dired+)
+;;;; TRAMP
+(require 'tramp)
+(setq tramp-default-method "ssh")
+;;;;  EVAL and REPLACE
+(defun eval-and-replace ()
+  "Replace the preceding sexp with its value."
+  (interactive)
+  (backward-kill-sexp)
+  (condition-case nil
+      (prin1 (eval (read (current-kill 0)))
+             (current-buffer))
+    (error (message "Invalid expression")
+           (insert (current-kill 0)))))
+(global-set-key (kbd "C-c e") 'eval-and-replace)
 ;;; HELP
 (require 'help+)
 (require 'help-fns+)
 (require 'help-mode+)
+;;; DIRED
+(message "[✓]  Commencer DIRED et OS X")
+(require 'dired+)
 ;; dired avec OSX quiklook
 (require 'dired)
 (require 'cl)
@@ -309,6 +364,9 @@ and then calling `my-dired-kill-spawn' twice."
 (setq speedbar-show-unknown-files t)
 (setq speedbar-directory-unshown-regexp "^$")
 (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
+;;;; autoexpand
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
 ;;;; // END UI
 ;;;; ESHELL
 (message "[✓]  Commencer ESHELL")
@@ -317,8 +375,27 @@ and then calling `my-dired-kill-spawn' twice."
   (setq eshell-highlight-prompt nil
         eshell-prompt-function 'epe-theme-lambda))
 (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode)
+(require 'esh-help)
+(setup-esh-help-eldoc)  ;; To use eldoc in Eshell
+;;;; COMMUNICATIONS
+;;; EMAIL
+;; Mutt support.
+(setq auto-mode-alist (append '(("/tmp/mutt.*" . mail-mode)) auto-mode-alist))
+(add-to-list 'auto-mode-alist '("/mutt" . mail-mode))
+(add-hook 'mail-mode-hook 'turn-on-auto-fill)
+;;; DRAG STUFF
+(drag-stuff-global-mode 1)
+(drag-stuff-define-keys)
+(add-to-list 'drag-stuff-except-modes 'org-mode)
+;;; expand region
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+;;;; // END UI
+;;;; ................................................................................
 ;;;; ORG
+;;;; ................................................................................
 (message "[✓]  Commencer ORG")
+(require 'org)
 (require 'org-bullets)
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; Set to the location of your Org files on your local system
@@ -327,20 +404,188 @@ and then calling `my-dired-kill-spawn' twice."
 (setq org-mobile-inbox-for-pull "~/org/flagged.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(setq org-ellipsis "↴")
+;; AucTeX
+(message "[✓]  Commencer TEX")
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+(setq TeX-PDF-mode t)
+;; Use Skim as viewer, enable source <-> PDF sync
+;; make latexmk available via C-c C-c
+;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
+(add-hook 'LaTeX-mode-hook (lambda ()
+  (push
+    '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+      :help "Run latexmk on file")
+    TeX-command-list)
+  (add-to-list 'TeX-command-list
+	       '("XeLaTeX" "xelatex -interaction=nonstopmode %s" TeX-run-command t t :help "Run xelatex") t))
+ )
+(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
+;; use Skim as default pdf viewer
+;; Skim's displayline is used for forward search (from .tex to .pdf)
+;; option -b highlights the current line; option -g opens Skim in the background
+(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(setq TeX-view-program-list
+      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+;;;; UML  E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
+;;;; ................................................................................
+(add-to-list
+  'org-src-lang-modes '("plantuml" . plantuml))
+;;;; E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
+;; Enable plantuml-mode for PlantUML files
+(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+;; MD MODE
+(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+;;;; REVEAL PRESENTATIONS
+(require 'ox-reveal)
+;;;; END E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
+;;;; END ORG and DOC PREP
+;;;; ................................................................................
 ;;; info et doc
-(message "[✓]  Commencer DOC")
+(message "[✓]  Commencer DOCUMENTATION")
 ;;;; INFO
 (require 'info+)
 ;;;; ELDOC
 (require 'eldoc)
 (require 'css-eldoc)
-(load-library "javascript-eldoc")
-(require 'javascript-eldoc)
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'css-mode-hook 'turn-on-css-eldoc)
-(add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
+;(add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
+;;;; END DOCUMENTATION
+;;; HELM
+;;;; ................................................................................
+(message "[✓]  Commencer HELM")
+;; https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
+;; 
+;; http://tuhdo.github.io/helm-intro.html
+(setq locate-command "mdfind")
+(require 'helm-config)
+(when (executable-find "curl")
+  (setq helm-google-suggest-use-curl-p t))
+(helm-mode 1)
+(helm-autoresize-mode 1)
+(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
+(setq helm-buffers-fuzzy-matching t
+      helm-recentf-fuzzy-match    t)
+(setq helm-semantic-fuzzy-match t
+      helm-imenu-fuzzy-match    t)
+(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
+(setq helm-locate-command "mdfind -name %s %s")
+;; helm-flycheck - show flycheck errors
+(eval-after-load 'flycheck
+  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+;;;; ................................................................................
+;;;; litteraire
+;;;; ................................................................................
+(message "[✓]  Commencer Litteraire")
+(flycheck-define-checker proselint
+  "A linter for prose."
+  :command ("proselint" source-inplace)
+  :error-patterns
+  ((warning line-start (file-name) ":" line ":" column ": "
+        (id (one-or-more (not (any " "))))
+        (message) line-end))
+  :modes (text-mode markdown-mode gfm-mode))
+(require 'helm-org-rifle)
+(add-to-list 'flycheck-checkers 'proselint)
+;--------------------------------------------------------------------------------
+;;;;
+;;;; ..............E N T E R P R I S E  Q U A L I T Y................................
+;;;;
+(message "[✓]  Commencer Tech POUBELLE")
+;;;; tech poubelle
+;;;; Angular - "it gets its own section"
+(message "[✓]    Start Angular")
+;; angular-mode
+;; angular-html-mode
+;; (add-to-list 'yas-snippet-dirs "/path/to/angularjs-mode/snippets")
+;; (add-to-list 'ac-dictionary-directories "/path/to/angularjs-mode/ac-dict")
+;; (add-to-list 'ac-modes 'angular-mode)
+;; (add-to-list 'ac-modes 'angular-html-mode)
+;; ng-2 mode
+(message "[✓]      TypeScript")
+;;; Typescript and TIDE and TSSERVER
+(message "[✓]      FLOW STATIC TYPE CHECKER")
+;;; NPM MODE
+(message "[✓]    Start NPM")
+(npm-global-mode)
+;;; YAML
+(message "[✓]    Start YAML")
+(require 'yaml-mode)
+(add-to-list 'auto-mode-alist '("\\.yml\\'" . yaml-mode))
+;; YAML Lint https://github.com/adrienverge/yamllint
+;; sudo pip install yamllint
+(require 'flycheck-yamllint)
+(eval-after-load 'flycheck
+  '(add-hook 'flycheck-mode-hook 'flycheck-yamllint-setup))
+;;; ansible
+(message "[✓]    Start Ansible")
+(add-hook 'yaml-mode-hook #'ansible-doc-mode)
+; RUBY - this is not in dev since we are not doing rails
+(message "[✓]    Start RUBY")
+;;(add-hook 'ruby-mode-hook 'projectile-on)
+(require 'robe)
+(add-hook 'ruby-mode-hook 'robe-mode)
+(add-hook 'projectile-mode-hook 'projectile-rails-on)
+(global-set-key (kbd "C-c r r") 'inf-ruby)
+(add-hook 'after-init-hook 'inf-ruby-switch-setup)
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))
+(add-to-list 'auto-mode-alist
+             '("\\(Capfile\\|Gemfile\\(?:\\.[a-zA-Z0-9._-]+\\)?\\|[rR]akefile\\)\\'" . ruby-mode))
+(require 'flymake-ruby)
+(add-hook 'ruby-mode-hook 'flymake-ruby-load)
+;; Turn on eldoc in ruby files to display info about the
+;; method or variable at point
+(add-hook 'ruby-mode-hook 'eldoc-mode)
+(message "[✓]    End RUBY")
+;; Puppet
+(message "[✓]    Start Puppet")
+;;(autoload 'puppet-mode "puppet-mode" "Major mode for editing puppet manifests")
+;(add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
+(message "[✓]    End Puppet")
+;;;; end tech poubelle
+;;;;
+;;;;
+;;;; Systemes PROG et DevOps
+(message "[✓]  Commencer DevOps")
+(require 'generic-x)
+; NGINX
+(require 'nginx-mode)
+(add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode))
+(message "[✓]    NGINX")
+;;;;
+;;;; ................................................................................
+;;;;
+;;;; ...............PROG.............................................................
+(message "[✓]  Commencer PROG")
+;;;; ................................................................................
+;;; compile buffer bury 
+(bury-successful-compilation 1)
+;;;; MAGIT
+(message "[✓]    MAGIT and GIT")
+(global-auto-revert-mode 1)
+(setq magit-repository-directories '( "~/src" ))
+(setq auto-revert-check-vc-info t)
+;;; GIT-WIP
+(add-to-list 'exec-path "~/opt/git-wip/")
+(load "~/opt/git-wip/emacs/git-wip.el")
+(message "[✓] git-wip and git-wip-timemachine")
+; projectile
+(projectile-global-mode)
+(global-set-key (kbd "M-<f2>") 'projectile-speedbar-open-current-buffer-in-tree)
+(message "[✓]    Projectile")
 ;;;; REGEX
 (require 'foreign-regexp)
 (custom-set-variables
@@ -348,8 +593,36 @@ and then calling `my-dired-kill-spawn' twice."
                                        ;; from 'perl, 'ruby, 'javascript or
                                        ;; 'python.
    '(reb-re-syntax 'foreign-regexp))   ;; Tell re-builder to use foreign regexp.
+;;; flyspell-prog
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+(message "[✓]    flyspell-prog-mode")
+;;; rainbow delimeters
+(require 'rainbow-delimiters)
+;(global-rainbow-delimiters-mode) was removed, too much work
+;; - To enable it in all programming-related emacs modes (Emacs 24+):
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(message "[✓]    rainbow-delimeters")
+;; flycheck-plantuml
+(with-eval-after-load 'flycheck
+  (require 'flycheck-plantuml)
+  (flycheck-plantuml-setup))
+;;;; Electric pairs
+;; auto close bracket insertion. New in emacs 24
+(electric-pair-mode 1)
+(message "[✓]    electric-pair")
+(message "[✓]    Start App Dev:: SQL")
+(message "*****")
+;;M-x package-install edbi
+;;cpan RPC::EPC::Service
+(require 'edbi)
+(autoload 'e2wm:dp-edbi "e2wm-edbi" nil t)
+(global-set-key (kbd "s-d") 'e2wm:dp-edbi)
+(message "[✓]    end SQL")
+(message "*****")
+;; END SQL
 ;;;; LISPS
-(message "[✓]  Commencer LISP")
+;;;; ................................................................................
+(message "[✓]    Commencer LISP")
 (show-paren-mode 1)
 ;;;; GUILE GEISER SCHEME
 (require 'ac-geiser)
@@ -390,42 +663,269 @@ and then calling `my-dired-kill-spawn' twice."
 (require 'clips-mode)
 (setq inferior-clips-program "clips")
 ;;;; ESS-R
-(require 'ess-site)
-(setq ess-eval-visibly nil)
-(define-key ac-completing-map (kbd "M-h") 'ac-quick-help)
-;;;; FLYCHECK
-(require 'flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
-;; AucTeX
-(message "[✓]  Commencer TEX")
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-(add-hook 'LaTeX-mode-hook 'visual-line-mode)
-(add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-(setq TeX-PDF-mode t)
-;; Use Skim as viewer, enable source <-> PDF sync
-;; make latexmk available via C-c C-c
-;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
-(add-hook 'LaTeX-mode-hook (lambda ()
-  (push
-    '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
-      :help "Run latexmk on file")
-    TeX-command-list)
-  (add-to-list 'TeX-command-list
-	       '("XeLaTeX" "xelatex -interaction=nonstopmode %s" TeX-run-command t t :help "Run xelatex") t))
+;; (require 'ess-site)
+;; (setq ess-eval-visibly nil)
+;; (define-key ac-completing-map (kbd "M-h") 'ac-quick-help)
+;;;; ................................................................................
+;;;; Javascript
+(message "[✓]    Commencer JS")
+;;;; JSON
+(require 'flycheck-demjsonlint)
+(message "[✓]      Start App Dev:: JavaScript-Web")
+;;;; JS2-MODE
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
+(add-hook 'js2-mode-hook 'ac-js2-mode)
+(setq ac-js2-evaluate-calls t)
+(setq js2-highlight-level 3)
+(js2-imenu-extras-mode)
+;; node
+(add-to-list 'interpreter-mode-alist '("node" . js2-mode))
+;;; VAR higlight
+;; (require 'js2-highlight-vars)
+;; (if (featurep 'js2-highlight-vars)
+;;     (js2-highlight-vars-mode))
+(eval-after-load "js2-highlight-vars-autoloads"
+  '(add-hook 'js2-mode-hook (lambda () (js2-highlight-vars-mode))))
+(add-hook 'js2-mode-hook (lambda ()
+                           (tern-mode)))
+(message "[✓]      Start App Dev:: JavaScript::JSLint")
+(require 'flymake-easy)
+(require 'flymake-jslint)
+(add-hook 'js-mode-hook 'flymake-jslint-load)
+(add-hook 'js2-mode-hook 'flymake-jslint-load)
+;;; JS2-REFACTOR
+(message "[✓]    JS2-REFACTOR")
+(require 'js2-refactor)
+(add-hook 'js2-mode-hook #'js2-refactor-mode)
+(js2r-add-keybindings-with-prefix "C-c r")
+;; ; paredit
+;; (defun my-paredit-nonlisp ()
+;;   "Turn on paredit mode for non-lisps."
+;;   (interactive)
+;;   (set (make-local-variable 'paredit-space-for-delimiter-predicates)
+;;        '((lambda (endp delimiter) nil)))
+;;   (paredit-mode 1))
+;; (add-hook 'js2-mode-hook 'my-paredit-nonlisp)
+;; (define-key js2-mode-map "{" 'paredit-open-curly)
+;; (define-key js2-mode-map "}" 'paredit-close-curly-and-newline)
+;;;; Tern
+(add-to-list 'load-path "~/opt/tern/emacs")
+(autoload 'tern-mode "tern.el" nil t)
+(add-hook 'js-mode-hook (lambda () (tern-mode t)))
+(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+;(define-key tern-mode-keymap [(control ?c) (control ?t)] 'tern-get-type)
+(eval-after-load 'tern
+   '(progn
+      (require 'tern-auto-complete)
+      (tern-ac-setup)))
+;;;; ................................................................................
+;;;; JS related DOM and WEB
+;;;; WEB MODE
+(message "[✓]    WEB-MODE")
+;
+(require 'web-mode)
+(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.mustache\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
+(add-to-list 'web-mode-ac-sources-alist
+             '("html" . (ac-source-html-tag
+                         ac-source-html-attribute)))
+;; engines a-list
+(setq web-mode-engines-alist
+      '(("\\.hbs\\" . "ctemplate"))
+      )
+;; hooks and custom for web-mode
+(defun web-mode-hook ()
+  "Hooks for Web mode."
+(setq web-mode-markup-indent-offset 2) )
+;;indent
+(add-hook 'web-mode-hook 'web-mode-hook)
+;(add-hook 'web-mode-hook 'tagedit-mode)
+(setq web-mode-markup-indent-offset 2)
+(setq web-mode-css-indent-offset 2)
+(setq web-mode-code-indent-offset 2)
+(setq web-mode-indent-style 2)
+;;padding
+(setq web-mode-style-padding 1)
+(setq web-mode-script-padding 1)
+(setq web-mode-block-padding 0)
+;; comment style
+(setq web-mode-comment-style 2)
+;; highlight
+;;(set-face-attribute 'web-mode-css-rule-face nil :foreground "Pink3")
+;;navigate tags
+(setq web-mode-ac-sources-alist
+  '(("css" . (ac-source-css-property))
+    ("html" . (ac-source-words-in-buffer ac-source-abbrev))))
+(add-hook 'web-mode-before-auto-complete-hooks
+          '(lambda ()
+             (let ((web-mode-cur-language
+                    (web-mode-language-at-pos)))
+               (if (string= web-mode-cur-language "php")
+                   (yas-activate-extra-mode 'php-mode)
+                 (yas-deactivate-extra-mode 'php-mode))
+               (if (string= web-mode-cur-language "css")
+                   (setq emmet-use-css-transform t)
+                 (setq emmet-use-css-transform nil)))))
+(define-key web-mode-map (kbd "C-n") 'web-mode-tag-match)
+;;(setq web-mode-enable-current-element-highlight t)
+(setq web-mode-enable-current-column-highlight t)
+;;;tagedit
+;;;; emmet . and tagedit . conflict
+;;(tagedit-add-experimental-features)
+(eval-after-load "sgml-mode"
+  '(progn
+     (require 'tagedit)
+     (tagedit-add-paredit-like-keybindings)
+     (add-hook 'html-mode-hook (lambda () (tagedit-mode 1)))))
+(message "[✓]    end web-mode")
+;; END WEBMODE
+;;;; ................................................................................
+(message "[✓]      web-beautify")
+(eval-after-load 'js2-mode
+  '(define-key js2-mode-map (kbd "C-c b") 'web-beautify-js))
+;; Or if you're using 'js-mode' (a.k.a 'javascript-mode')
+(eval-after-load 'js
+  '(define-key js-mode-map (kbd "C-c b") 'web-beautify-js))
+(eval-after-load 'json-mode
+  '(define-key json-mode-map (kbd "C-c b") 'web-beautify-js))
+(eval-after-load 'sgml-mode
+  '(define-key html-mode-map (kbd "C-c b") 'web-beautify-html))
+(eval-after-load 'css-mode
+  '(define-key css-mode-map (kbd "C-c b") 'web-beautify-css))
+;;;; ................................................................................
+;;;; O-O-O-O-O-O-O-O-O-O-O-O-O-( COLOR WEB )-O-O-O-O-O-O-O-O-O-O-O-O-O
+;;;; ................................................................................
+(message "[✓]    START COLOR")
+;; color.el
+;; hsl
+;; RGB
+;;
+;;  Various Color tools
+;;
+(require 'color)
+(message "[✓]      XAH css")
+(defvar xcm-color-names nil "a list of CSS color names.")
+(setq xcm-color-names
+'("aliceblue" "antiquewhite" "aqua" "aquamarine" "azure" "beige" "bisque" "black" "blanchedalmond" "blue" "blueviolet" "brown" "burlywood" "cadetblue" "chartreuse" "chocolate" "coral" "cornflowerblue" "cornsilk" "crimson" "cyan" "darkblue" "darkcyan" "darkgoldenrod" "darkgray" "darkgreen" "darkgrey" "darkkhaki" "darkmagenta" "darkolivegreen" "darkorange" "darkorchid" "darkred" "darksalmon" "darkseagreen" "darkslateblue" "darkslategray" "darkslategrey" "darkturquoise" "darkviolet" "deeppink" "deepskyblue" "dimgray" "dimgrey" "dodgerblue" "firebrick" "floralwhite" "forestgreen" "fuchsia" "gainsboro" "ghostwhite" "gold" "goldenrod" "gray" "green" "greenyellow" "grey" "honeydew" "hotpink" "indianred" "indigo" "ivory" "khaki" "lavender" "lavenderblush" "lawngreen" "lemonchiffon" "lightblue" "lightcoral" "lightcyan" "lightgoldenrodyellow" "lightgray" "lightgreen" "lightgrey" "lightpink" "lightsalmon" "lightseagreen" "lightskyblue" "lightslategray" "lightslategrey" "lightsteelblue" "lightyellow" "lime" "limegreen" "linen" "magenta" "maroon" "mediumaquamarine" "mediumblue" "mediumorchid" "mediumpurple" "mediumseagreen" "mediumslateblue" "mediumspringgreen" "mediumturquoise" "mediumvioletred" "midnightblue" "mintcream" "mistyrose" "moccasin" "navajowhite" "navy" "oldlace" "olive" "olivedrab" "orange" "orangered" "orchid" "palegoldenrod" "palegreen" "paleturquoise" "palevioletred" "papayawhip" "peachpuff" "peru" "pink" "plum" "powderblue" "purple" "red" "rosybrown" "royalblue" "saddlebrown" "salmon" "sandybrown" "seagreen" "seashell" "sienna" "silver" "skyblue" "slateblue" "slategray" "slategrey" "snow" "springgreen" "steelblue" "tan" "teal" "thistle" "tomato" "turquoise" "violet" "wheat" "white" "whitesmoke" "yellow" "yellowgreen")
  )
-(add-hook 'TeX-mode-hook '(lambda () (setq TeX-command-default "latexmk")))
-;; use Skim as default pdf viewer
-;; Skim's displayline is used for forward search (from .tex to .pdf)
-;; option -b highlights the current line; option -g opens Skim in the background
-(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-(setq TeX-view-program-list
-     '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-
+;;;   XAH LEE's HEX COLOR IN BUFFER
+(defun xah-syntax-color-hex ()
+"Syntax color hex color spec such as 「#ff1100」 in current buffer."
+  (interactive)
+  (font-lock-add-keywords
+   nil
+   '(("#[abcdef[:digit:]]\\{6\\}"
+      (0 (put-text-property
+          (match-beginning 0)
+          (match-end 0)
+          'face (list :background (match-string-no-properties 0)))))))
+  (font-lock-fontify-buffer)
+  )
+(defun xah-syntax-color-hsl ()
+  "Syntax color hex color spec such as 「hsl(0,90%,41%)」 in current buffer."
+  (interactive)
+  (font-lock-add-keywords
+   nil
+  '(("hsl( *\\([0-9]\\{1,3\\}\\) *, *\\([0-9]\\{1,3\\}\\)% *, *\\([0-9]\\{1,3\\}\\)% *)"
+     (0 (put-text-property
+         (+ (match-beginning 0) 3)
+         (match-end 0)
+         'face (list :background
+ (concat "#" (mapconcat 'identity
+                        (mapcar
+                         (lambda (x) (format "%02x" (round (* x 255))))
+                         (color-hsl-to-rgb
+                          (/ (string-to-number (match-string-no-properties 1)) 360.0)
+                          (/ (string-to-number (match-string-no-properties 2)) 100.0)
+                          (/ (string-to-number (match-string-no-properties 3)) 100.0)
+                          ) )
+                        "" )) ;  "#00aa00"
+                      ))))) )
+  (font-lock-fontify-buffer)
+  )
+(add-hook 'css-mode-hook 'xah-syntax-color-hex)
+(add-hook 'php-mode-hook 'xah-syntax-color-hex)
+(add-hook 'html-mode-hook 'xah-syntax-color-hex)
+(add-hook 'css-mode-hook 'xah-syntax-color-hsl)
+(add-hook 'php-mode-hook 'xah-syntax-color-hsl)
+(add-hook 'html-mode-hook 'xah-syntax-color-hsl)
+(message "[✓]    COLOR DONE")
+;;;; ................................................................................
+(message "[✓]    CSS")
+;;;; EMMET
+;; Place point in a emmet snippet and press C-j to expand it
+;; (or alternatively, alias your preferred keystroke to M-x emmet-expand-line)
+;; and you'll transform your snippet into the appropriate tag structure.
+(add-hook 'sgml-mode-hook 'emmet-mode) ; Auto-start on any markup modes
+(add-hook 'css-mode-hook  'emmet-mode) ; enable Emmet's css abbreviation.
+(add-hook 'web-mode-hook 'emmet-mode)  ; Auto-start on web mode
+(add-hook 'emmet-mode-hook (lambda () (setq emmet-indentation 2))) ;; indent 2 spaces.
+(setq emmet-move-cursor-between-quotes t) ;; default nil
+;;(add-to-list 'auto-mode-alist '("\\.html?\\'" . emmet-mode))
+;;; ac-emmet
+(add-hook 'sgml-mode-hook 'ac-emmet-html-setup)
+(add-hook 'css-mode-hook 'ac-emmet-css-setup)
+(add-hook 'html-mode-hook 'ac-emmet-html-setup)
+(add-hook 'web-mode-hook 'ac-emmet-html-setup)
+(setq emmet-preview-default t)
+(message "[✓]    emmet-mode")
+;; END EMMET
+;;;; SCSS-MODE
+;; https://github.com/antonj/.emacs.d/blob/master/aj-compilation.el
+(message "[✓]  scss-mode")
+;;; migrate to package from elisp file
+;;(add-to-list 'load-path (expand-file-name "~/.emacs.d/lisp/scss-mode-el"))
+(autoload 'scss-mode "scss-mode")
+(add-to-list 'auto-mode-alist '("\\.scss$" . scss-mode))
+(require 'flymake-sass)
+(add-hook 'sass-mode-hook 'flymake-sass-load)
+(add-hook 'scss-mode-hook 'flymake-sass-load)
+(require 'flymake-css)
+(add-hook 'css-mode-hook 'flymake-css-load)
+;; autocomplete
+(add-hook 'sass-mode-hook 'auto-complete-mode)
+(add-hook 'scss-mode-hook 'auto-complete-mode)
+;;; flycheck scss-lint
+(add-hook 'scss-mode-hook 'flycheck-mode)
+;; END SCSS
+;; END CSS
+;;;; ................................................................................
+;;;;
+;;;; end JS
+;;;;
+;;;; ................................................................................
+(message "[✓]  Commencer E N T E R P R I S E  Q U A L I T Y")
+;;;; ................................................................................
+(require 'eclim)
+(setq eclimd-autostart t)
+(custom-set-variables
+  '(eclim-eclipse-dirs '("~/eclipse/java-neon/Eclipse.app/Contents/Eclipse/"))
+  '(eclim-executable "~/eclipse/java-neon/Eclipse.app/Contents/Eclipse/eclim")
+  '(eclimd-default-workspace "~/src/java"))
+(add-hook 'java-mode-hook 'eclim-mode)
+;;; Displaying compilation error messages in the echo area
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
+;; add the emacs-eclim source
+;(require 'ac-emacs-eclim-source)
+(ac-emacs-eclim-config)
+;;;; ................................................................................
+;;;; END PROG
+;;;; ................................................................................
+;;;;
+;;;; ................................................................................
+;;;; INPUT AND KEYBINDINGS
+;;;; ................................................................................
+(message "[✓]  Commencer Keybindings")
 ;;;; Keybindings
 (global-set-key "\M-v" 'golden-ratio-scroll-screen-down)
 (global-set-key "\C-v" 'golden-ratio-scroll-screen-up)
@@ -436,52 +936,9 @@ and then calling `my-dired-kill-spawn' twice."
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
-
-;;; HELM
-(message "[✓]  Commencer HELM")
-;; https://github.com/xiaohanyu/oh-my-emacs/blob/master/core/ome-completion.org
-;; 
-;; http://tuhdo.github.io/helm-intro.html
-(setq locate-command "mdfind")
-(require 'helm-config)
-(when (executable-find "curl")
-  (setq helm-google-suggest-use-curl-p t))
-(helm-mode 1)
-(helm-autoresize-mode 1)
-(setq helm-M-x-fuzzy-match t) ;; optional fuzzy matching for helm-M-x
-(setq helm-buffers-fuzzy-matching t
-      helm-recentf-fuzzy-match    t)
-(setq helm-semantic-fuzzy-match t
-      helm-imenu-fuzzy-match    t)
-(add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
-(setq helm-locate-command "mdfind -name %s %s")
-;;;; litteraire
-(flycheck-define-checker proselint
-  "A linter for prose."
-  :command ("proselint" source-inplace)
-  :error-patterns
-  ((warning line-start (file-name) ":" line ":" column ": "
-        (id (one-or-more (not (any " "))))
-        (message) line-end))
-  :modes (text-mode markdown-mode gfm-mode))
-
-(add-to-list 'flycheck-checkers 'proselint)
-;; Enable mouse support
-(defun cpc26/xmouse-enable (frame)
-  "Active xterm mouse and scroll from make FRAME."
-  (if (display-graphic-p)
-      (progn
-  (require 'mouse)
-  (xterm-mouse-mode t)
-  (global-set-key [mouse-4] (lambda ()
-			      (interactive)
-			      (scroll-down 1)))
-  (global-set-key [mouse-5] (lambda ()
-			      (interactive)
-			      (scroll-up 1)))
-  (defun track-mouse (e))
-  (setq mouse-sel-mode t))))
+;;;; ................................................................................
 ;;;; start the server
+;;;; ................................................................................
 (message "[✓]  Commencer SERVER")
 (require 'server)
 (add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)

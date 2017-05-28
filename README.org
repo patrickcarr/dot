@@ -1,0 +1,5 @@
+* dot
+   dotfiles stow packages
+The last Emacs Config
+#+ATTR_HTML: alt="Tell me the good things about you dot emacs."
+[[file:img/emacs-init.png]]

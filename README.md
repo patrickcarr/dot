@@ -1,3 +1,0 @@
-# dot
-dotfiles stow packages
-

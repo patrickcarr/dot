@@ -11,3 +11,5 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 
 source ~/.xsh
 
+
+test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
