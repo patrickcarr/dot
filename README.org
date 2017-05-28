@@ -1,5 +1,4 @@
 * dot
-   dotfiles stow packages
-The last Emacs Config
-#+ATTR_HTML: alt="Tell me the good things about you dot emacs."
+E N T E R P R I S E  Q U A L I T Y stow pacakges.
+#+ATTR_HTML: alt="Tell me the good things about your dot emacs."
 [[file:img/emacs-init.png]]
