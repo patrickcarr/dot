@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-05-29 09:59:19 cpc26>
+;Time-stamp: <2017-05-29 10:13:04 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -29,7 +29,7 @@
 ;--------------------------------------------------------------------------------
 ;;;;
 ;;;; ..............E N T E R P R I S E  Q U A L I T Y................................
-(require 'POUBELLE.)
+(require 'POUBELLE)
 ;;;;
 ;;;; Systemes PROG et DevOps
 (require 'Voight-Kampff-PROG)
