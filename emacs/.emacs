@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-05-29 00:19:50 cpc26>
+;Time-stamp: <2017-05-29 00:34:55 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -682,9 +682,9 @@
 (bury-successful-compilation 1)
 ;;;; MAGIT
 (message "[✓]    MAGIT and GIT")
-(global-auto-revert-mode 1)
+;(global-auto-revert-mode 1)
 (setq magit-repository-directories '( "~/src" ))
-(setq auto-revert-check-vc-info t)
+;(setq auto-revert-check-vc-info t)
 ;;; GIT-WIP
 (add-to-list 'exec-path "~/opt/git-wip/")
 (load "~/opt/git-wip/emacs/git-wip.el")
