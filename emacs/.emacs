@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-05-29 00:49:47 cpc26>
+;Time-stamp: <2017-05-29 09:06:51 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -9,10 +9,6 @@
 (message "[✓]  Commencer PACKAGE-INIT")
 (package-initialize)
 (message "[✓]  Commencer CUSTOM")
-;; default font to LispM
-;;  anciens à l’honneur
-(set-face-attribute 'default nil
-                :family "LispM" :height 140 :weight 'regular)
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
 ;;;; elpa
@@ -50,58 +46,7 @@
 ;;;; UI
 ;;;; ................................................................................
 (message "[✓]  Commencer UI")
-;;;--------------------------------------------------------------------------------
-;;; FONTS
-;; Use monospaced font faces in current buffer
-(defun my-buffer-face-mode-fixed ()
-   "Set a fixed width (monospace) font in current buffer."
-   (interactive)
-   (defvar buffer-face-mode-face '(:family "Anonymous Pro" :height 160))
-   (buffer-face-mode))
-;
-;; Use fixed width font face Courier New in current buffer
-(defun my-buffer-face-mode-courier ()
-   "Set font to fixed width (monospace) font Courier New in current buffer."
-   (interactive)
-   (defvar buffer-face-mode-face '(:family "Courier New" :height 160 :width regular))
-   (buffer-face-mode))
-;
-;; Use fixed width font face Mensch in current buffer
-(defun my-buffer-face-mode-mensch ()
-   "Set font to fixed width (monospace) font Mensch in current buffer."
-   (interactive)
-   (defvar buffer-face-mode-face '(:family "Mensch" :height 160 :width regular))
-   (buffer-face-mode))
-;
-(defvar fixed-pitch '(:family "Anonymous Pro" :height 160 :width regular))
-;
-(defun setq-buffer-fixed-pitch ()
-  "Set 'fixed-pitch-mode' to true."
-    (interactive)
-    (fixed-pitch-mode t))
-;
-;; add fixed for prog as default
-(add-hook 'prog-mode-hook 'my-buffer-face-mode-fixed)
-;; ========================================
-;; Use variable width font faces in current buffer
-(defun my-buffer-face-mode-variable ()
-   "Set font to a variable width (proportional) fonts in current buffer."
-   (interactive)
-   (defvar buffer-face-mode-face '(:family "Symbola" :height 160 :width regular))
-   (buffer-face-mode))
-;
-;; use Symbola as Variable-Pitch font
-(defvar variable-pitch '(:family "Symbola" :height 160))
-;
-(defun setq-buffer-variable-pitch ()
-  "Set 'variable-pitch-mode' to true."
-    (interactive)
-    (variable-pitch-mode t))
-;
-;; add variable for text as default
-(add-hook 'text-mode-hook 'variable-pitch-mode)
-;;; END FONTS
-;;;--------------------------------------------------------------------------------
+
 ;;;; BELL - pas le BELL
 (defun my-terminal-visible-bell ()
    "Un effet de cloche visuel plus amical."
@@ -116,8 +61,6 @@
 (defvar sml/no-confirm-load-theme t)
 (defvar sml/theme 'light)
 (sml/setup)
-;;; iELM
-(add-hook 'ielm-mode-hook 'setq-buffer-fixed-pitch)
 ;;;; TABBAR
 (message "[✓]  Commencer TABBAR")
 (require 'tabbar)
@@ -244,12 +187,12 @@
 (require 'recentf)
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
-(setq savehist-file "~/.emacs.d/savehist")
+(defvar savehist-file "~/.emacs.d/savehist")
 (savehist-mode 1)
 (setq history-length t)
 (setq history-delete-duplicates t)
-(setq savehist-save-minibuffer-history 1)
-(setq savehist-additional-variables
+(defvar savehist-save-minibuffer-history 1)
+(defvar savehist-additional-variables
       '(kill-ring
         search-ring
         regexp-search-ring
@@ -297,7 +240,6 @@
       " "
       (mode 16 16 :left :elide)
       " " filename-and-process)))
-(add-hook 'ibuffer-mode-hook 'my-buffer-face-mode-fixed)
 ;;;; TRAMP
 (require 'tramp)
 (setq tramp-default-method "ssh")
@@ -322,10 +264,9 @@
 ;; dired avec OSX quiklook
 (require 'dired)
 (require 'cl)
-
+;;; TODO resolve this warning
 (defvar my-dired-spawn nil)
 (make-variable-buffer-local 'my-dired-spawn)
-
 ;; http://stackoverflow.com/a/20023781/2112489
 (defun my-dired-kill-last-process-named (name)
 "NAME of process, function initially written by @wvxvw, and revised by @lawlist."
@@ -342,7 +283,6 @@
         (when (and process (get-process process))
           (delete-process process)
           (setq p process)))) p))
-
 (defun my-dired-qlmanage ()
   "Press space and get preview of image of file at point."
 (interactive)
@@ -389,21 +329,18 @@
           (t
             (message "ABNORMAL: my-dired-kill-spawn (%s) | %s | %s"
               (process-exit-status p) p e)))))))
-
 (defun my-dired-previous-line (arg)
   "Kill the process and move to previous line ARG."
 (interactive "^p")
   (dired-previous-line arg)
   (let ((my-dired-spawn t))
     (my-dired-kill-last-process-named "qlmanage")))
-
 (defun my-dired-next-line (arg)
   "Kill the process and move to next lines ARG."
 (interactive "^p")
   (dired-next-line arg)
   (let ((my-dired-spawn t))
     (my-dired-kill-last-process-named "qlmanage")))
-
 (defun my-dired-quicklook ()
   "Key bindings for quick preview in dired os x."
 (interactive)
@@ -443,7 +380,6 @@
 (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode)
 (require 'esh-help)
 (setup-esh-help-eldoc)  ;; To use eldoc in Eshell
-(add-hook 'eshell-mode-hook 'my-buffer-face-mode-fixed)
 ;;;; COMMUNICATIONS
 ;;; EMAIL
 ;; Mutt support.
@@ -467,33 +403,23 @@
 ;; Set to the location of your Org files on your local system
 (setq org-directory "~/org")
 ;; Set to the name of the file where new notes will be stored
-(setq org-mobile-inbox-for-pull "~/org/flagged.org")
+(defvar org-mobile-inbox-for-pull "~/org/flagged.org")
 ;; Set to <your Dropbox root directory>/MobileOrg.
-(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+(defvar org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-ellipsis "↴")
-(defun set-buffer-variable-pitch ()
-  "Main text variable, code and tables are fixed."
-    (interactive)
-    (variable-pitch-mode t)
-    (setq line-spacing 3)
-     (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
-     (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
-     (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
-    )
-(add-hook 'org-mode-hook 'set-buffer-variable-pitch)
 ;; set after so bullets appear
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; AucTeX
 (message "[✓]  Commencer TEX")
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
+(defvar TeX-auto-save t)
+(defvar TeX-parse-self t)
 (setq-default TeX-master nil)
 (add-hook 'LaTeX-mode-hook 'visual-line-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
 (add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-(setq reftex-plug-into-AUCTeX t)
-(setq TeX-PDF-mode t)
+(defvar reftex-plug-into-AUCTeX t)
+(defvar TeX-PDF-mode t)
 ;; Use Skim as viewer, enable source <-> PDF sync
 ;; make latexmk available via C-c C-c
 ;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
@@ -509,8 +435,8 @@
 ;; use Skim as default pdf viewer
 ;; Skim's displayline is used for forward search (from .tex to .pdf)
 ;; option -b highlights the current line; option -g opens Skim in the background
-(setq TeX-view-program-selection '((output-pdf "PDF Viewer")))
-(setq TeX-view-program-list
+(defvar TeX-view-program-selection '((output-pdf "PDF Viewer")))
+(defvar TeX-view-program-list
       '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
 ;;;; UML  E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
 ;;;; ................................................................................
@@ -523,17 +449,6 @@
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
-;; display source code blocks or pre blocks in monospace
-(eval-after-load "markdown-mode"
-  '(mapc
-    (lambda (face)
-      (set-face-attribute
-       face nil
-       :inherit
-       (my-adjoin-to-list-or-symbol
-        'fixed-pitch
-        (face-attribute face :inherit))))
-    (list 'markdown-pre-face 'markdown-inline-code-face)))
 ;;;; REVEAL PRESENTATIONS
 (require 'ox-reveal)
 ;;;; END E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
@@ -543,22 +458,6 @@
 (message "[✓]  Commencer DOCUMENTATION")
 ;;;; INFO
 (require 'info+)
-;;; display Info mode buffers in proportional font
-;;; but code examples in monospace font
-(defvar my-rx-info-code (rx bol "     " (* not-newline) eol))
-(defun my-Info-font-lock ()
-  "Use fixed fonts for code examples."
-  (interactive)
-  (require 'org)
-  (font-lock-add-keywords
-   nil
-   `((,my-rx-info-code
-      .
-      ;; let's just use org-block
-      (quote org-block)
-      ))))
-(add-hook 'Info-mode-hook 'my-Info-font-lock)
-(add-hook 'Info-mode-hook 'my-buffer-face-mode-variable)
 ;;;; ELDOC
 (require 'eldoc)
 (require 'css-eldoc)
@@ -590,7 +489,6 @@
 ;; helm-flycheck - show flycheck error2
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
-(add-hook 'helm-major-mode-hook 'my-buffer-face-mode-courier)
 ;;;; ................................................................................
 ;;;; litteraire
 ;;;; ................................................................................
@@ -681,9 +579,10 @@
 (bury-successful-compilation 1)
 ;;;; MAGIT
 (message "[✓]    MAGIT and GIT")
+;;; TODO  some consternation with auto-revert
 ;(global-auto-revert-mode 1)
-(setq magit-repository-directories '( "~/src" ))
 ;(setq auto-revert-check-vc-info t)
+(defvar magit-repository-directories '( "~/src" ))
 ;;; GIT-WIP
 (add-to-list 'exec-path "~/opt/git-wip/")
 (load "~/opt/git-wip/emacs/git-wip.el")
@@ -694,6 +593,7 @@
 (message "[✓]    Projectile")
 ;;;; REGEX
 (require 'foreign-regexp)
+;;; TODO  nice feature but byte compile always complains
 (custom-set-variables
    '(foreign-regexp/regexp-type 'javascript) ;; Choose your taste of foreign regexp
                                        ;; from 'perl, 'ruby, 'javascript or
@@ -718,6 +618,7 @@
 (message "[✓]    electric-pair")
 (message "[✓]    Start App Dev:: SQL")
 (message "*****")
+;;; TODO this needs DB specific PERL to work
 ;;M-x package-install edbi
 ;;cpan RPC::EPC::Service
 (require 'edbi)
