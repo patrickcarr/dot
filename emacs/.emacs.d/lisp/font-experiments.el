@@ -1,9 +1,9 @@
-;;; javascript-eldoc.el --- an eldoc-mode plugin for JAVASCRIPT source code
+;;; font-experiments.el --- an experiment with fonts
 
 ;; Copyright (C) 2015-2016  Colin Carr
 
-;; Author: Colin Carr <colincarr@qq.com>
-;; Keywords:
+;; Author: Colin Carr <cpc26@member.fsf.org>
+;; Keywords: experimental, fonts
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
