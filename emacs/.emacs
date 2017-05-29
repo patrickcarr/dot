@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-05-28 16:12:57 cpc26>
+;Time-stamp: <2017-05-29 00:19:50 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -9,6 +9,10 @@
 (message "[✓]  Commencer PACKAGE-INIT")
 (package-initialize)
 (message "[✓]  Commencer CUSTOM")
+;; default font to LispM
+;;  anciens à l’honneur
+(set-face-attribute 'default nil
+                :family "LispM" :height 140 :weight 'regular)
 (setq custom-file "~/.emacs-custom.el")
 (load custom-file)
 ;;;; elpa
@@ -46,9 +50,61 @@
 ;;;; UI
 ;;;; ................................................................................
 (message "[✓]  Commencer UI")
+;;;--------------------------------------------------------------------------------
+;;; FONTS
+;; Use monospaced font faces in current buffer
+(defun my-buffer-face-mode-fixed ()
+   "Set a fixed width (monospace) font in current buffer."
+   (interactive)
+   (defvar buffer-face-mode-face '(:family "Anonymous Pro" :height 160))
+   (buffer-face-mode))
+;
+;; Use fixed width font face Courier New in current buffer
+(defun my-buffer-face-mode-courier ()
+   "Set font to fixed width (monospace) font Courier New in current buffer."
+   (interactive)
+   (defvar buffer-face-mode-face '(:family "Courier New" :height 160 :width regular))
+   (buffer-face-mode))
+;
+;; Use fixed width font face Mensch in current buffer
+(defun my-buffer-face-mode-mensch ()
+   "Set font to fixed width (monospace) font Mensch in current buffer."
+   (interactive)
+   (defvar buffer-face-mode-face '(:family "Mensch" :height 160 :width regular))
+   (buffer-face-mode))
+;
+(defvar fixed-pitch '(:family "Anonymous Pro" :height 160 :width regular))
+;
+(defun setq-buffer-fixed-pitch ()
+  "Set 'fixed-pitch-mode' to true."
+    (interactive)
+    (fixed-pitch-mode t))
+;
+;; add fixed for prog as default
+(add-hook 'prog-mode-hook 'my-buffer-face-mode-fixed)
+;; ========================================
+;; Use variable width font faces in current buffer
+(defun my-buffer-face-mode-variable ()
+   "Set font to a variable width (proportional) fonts in current buffer."
+   (interactive)
+   (defvar buffer-face-mode-face '(:family "Symbola" :height 160 :width regular))
+   (buffer-face-mode))
+;
+;; use Symbola as Variable-Pitch font
+(defvar variable-pitch '(:family "Symbola" :height 160))
+;
+(defun setq-buffer-variable-pitch ()
+  "Set 'variable-pitch-mode' to true."
+    (interactive)
+    (variable-pitch-mode t))
+;
+;; add variable for text as default
+(add-hook 'text-mode-hook 'variable-pitch-mode)
+;;; END FONTS
+;;;--------------------------------------------------------------------------------
 ;;;; BELL - pas le BELL
 (defun my-terminal-visible-bell ()
-   "Un effet de cloche visuel plus amical"
+   "Un effet de cloche visuel plus amical."
    (invert-face 'mode-line)
    (run-with-timer 0.1 nil 'invert-face 'mode-line))
 (setq visible-bell nil
@@ -57,9 +113,11 @@
 (fset 'yes-or-no-p 'y-or-n-p)
 (setq find-file-visit-truename t)
 ;;; MODE LINE
-(setq sml/no-confirm-load-theme t)
-(setq sml/theme 'light)
+(defvar sml/no-confirm-load-theme t)
+(defvar sml/theme 'light)
 (sml/setup)
+;;; iELM
+(add-hook 'ielm-mode-hook 'setq-buffer-fixed-pitch)
 ;;;; TABBAR
 (message "[✓]  Commencer TABBAR")
 (require 'tabbar)
@@ -67,6 +125,7 @@
 ;; Add a buffer modification state indicator in the tab label, and place a
 ;; space around the label to make it looks less crowd.
 (defadvice tabbar-buffer-tab-label (after fixup_tab_label_space_and_flag activate)
+  "Add a buffer modification state indicator in the tab label, and place a space around the label to make it look less crowded."
   (setq ad-return-value
 	(if (and (buffer-modified-p (tabbar-tab-value tab))
 		 (buffer-file-name (tabbar-tab-value tab)))
@@ -75,12 +134,16 @@
 
 ;; Called each time the modification state of the buffer changed.
 (defun ztl-modification-state-change ()
+   "Called each time the modification state of the buffer changed."
   (tabbar-set-template tabbar-current-tabset nil)
+  "Template and tab sets."
   (tabbar-display-update))
 
 ;; First-change-hook is called BEFORE the change is made.
 (defun ztl-on-buffer-modification ()
+  "First-change-hook is called BEFORE the change is made."
   (set-buffer-modified-p t)
+  "Is buffer modified?"
   (ztl-modification-state-change))
 (add-hook 'after-save-hook 'ztl-modification-state-change)
 
@@ -109,8 +172,8 @@
                  "%b"))))
 ;;;;linum
 (add-hook 'find-file-hook (lambda () (linum-mode 1)))
-(setq linum-format "%d ")
-;;; Tranparency
+(defvar linum-format "%d ")
+;;; Transparency
 (message "[✓]  Commencer TRANSPARENCY")
 ;;(set-frame-parameter (selected-frame) 'alpha '(<active> [<inactive>]))
 (set-frame-parameter (selected-frame) 'alpha '(85 50))
@@ -155,7 +218,7 @@
                               (interactive)
                               (scroll-up 1)))
   (defun track-mouse (e))
-  (setq mouse-sel-mode t))
+  (defvar mouse-sel-mode t))
 (defun cpc26/xmouse-enable (frame)
   "Active xterm mouse and scroll from make FRAME."
   (if (display-graphic-p)
@@ -169,7 +232,7 @@
                               (interactive)
                               (scroll-up 1)))
   (defun track-mouse (e))
-  (setq mouse-sel-mode t))))
+  (defvar mouse-sel-mode t))))
 ;;; window sizing
 (require 'golden-ratio)
 (golden-ratio-mode 1)
@@ -234,6 +297,7 @@
       " "
       (mode 16 16 :left :elide)
       " " filename-and-process)))
+(add-hook 'ibuffer-mode-hook 'my-buffer-face-mode-fixed)
 ;;;; TRAMP
 (require 'tramp)
 (setq tramp-default-method "ssh")
@@ -264,9 +328,9 @@
 
 ;; http://stackoverflow.com/a/20023781/2112489
 (defun my-dired-kill-last-process-named (name)
-"Function initially written by @wvxvw, and revised by @lawlist."
+"NAME of process, function initially written by @wvxvw, and revised by @lawlist."
   (let (p)
-    (cl-loop with name-re = 
+    (cl-loop with name-re =
              (format "^%s\\(?:<\\([[:digit:]]+\\)>\\)?" (regexp-quote name))
      for process in (process-list)
      for pname = (process-name process)
@@ -280,6 +344,7 @@
           (setq p process)))) p))
 
 (defun my-dired-qlmanage ()
+  "Press space and get preview of image of file at point."
 (interactive)
   (unless (my-dired-kill-last-process-named "qlmanage")
     (let* ((current-node (dired-get-file-for-visit)))
@@ -303,8 +368,7 @@
               (process-exit-status p) p e))))))))
 
 (defun my-dired-kill-spawn ()
-"This is essentially a three level incursion, starting with `my-dired-qlmanage'
-and then calling `my-dired-kill-spawn' twice."
+"This is essentially a three level incursion, starting with `my-dired-qlmanage' and then calling `my-dired-kill-spawn' twice."
 (interactive)
   (let* ((current-node (dired-get-file-for-visit)))
     (set-process-sentinel
@@ -327,21 +391,23 @@ and then calling `my-dired-kill-spawn' twice."
               (process-exit-status p) p e)))))))
 
 (defun my-dired-previous-line (arg)
+  "Kill the process and move to previous line ARG."
 (interactive "^p")
   (dired-previous-line arg)
   (let ((my-dired-spawn t))
     (my-dired-kill-last-process-named "qlmanage")))
 
 (defun my-dired-next-line (arg)
+  "Kill the process and move to next lines ARG."
 (interactive "^p")
   (dired-next-line arg)
   (let ((my-dired-spawn t))
     (my-dired-kill-last-process-named "qlmanage")))
 
 (defun my-dired-quicklook ()
+  "Key bindings for quick preview in dired os x."
 (interactive)
   (my-dired-qlmanage))
-
 (eval-after-load "dired" '(progn
   (define-key dired-mode-map [down] 'my-dired-next-line)
   (define-key dired-mode-map [up] 'my-dired-previous-line)
@@ -372,11 +438,12 @@ and then calling `my-dired-kill-spawn' twice."
 (message "[✓]  Commencer ESHELL")
 (with-eval-after-load "esh-opt"
   (autoload 'epe-theme-lambda "eshell-prompt-extras")
-  (setq eshell-highlight-prompt nil
-        eshell-prompt-function 'epe-theme-lambda))
+  (defvar eshell-highlight-prompt nil)
+  (defvar eshell-prompt-function 'epe-theme-lambda))
 (add-hook 'eshell-mode-hook 'eshell-fringe-status-mode)
 (require 'esh-help)
 (setup-esh-help-eldoc)  ;; To use eldoc in Eshell
+(add-hook 'eshell-mode-hook 'my-buffer-face-mode-fixed)
 ;;;; COMMUNICATIONS
 ;;; EMAIL
 ;; Mutt support.
@@ -397,7 +464,6 @@ and then calling `my-dired-kill-spawn' twice."
 (message "[✓]  Commencer ORG")
 (require 'org)
 (require 'org-bullets)
-(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; Set to the location of your Org files on your local system
 (setq org-directory "~/org")
 ;; Set to the name of the file where new notes will be stored
@@ -405,6 +471,19 @@ and then calling `my-dired-kill-spawn' twice."
 ;; Set to <your Dropbox root directory>/MobileOrg.
 (setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
 (setq org-ellipsis "↴")
+(defun set-buffer-variable-pitch ()
+  "Main text variable, code and tables are fixed."
+    (interactive)
+    (variable-pitch-mode t)
+    (setq line-spacing 3)
+     (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+     (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
+     (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+     (set-face-attribute 'org-block-background nil :inherit 'fixed-pitch)
+    )
+(add-hook 'org-mode-hook 'set-buffer-variable-pitch)
+;; set after so bullets appear
+(add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 ;; AucTeX
 (message "[✓]  Commencer TEX")
 (setq TeX-auto-save t)
@@ -445,6 +524,17 @@ and then calling `my-dired-kill-spawn' twice."
 (add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
 (add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+;; display source code blocks or pre blocks in monospace
+(eval-after-load "markdown-mode"
+  '(mapc
+    (lambda (face)
+      (set-face-attribute
+       face nil
+       :inherit
+       (my-adjoin-to-list-or-symbol
+        'fixed-pitch
+        (face-attribute face :inherit))))
+    (list 'markdown-pre-face 'markdown-inline-code-face)))
 ;;;; REVEAL PRESENTATIONS
 (require 'ox-reveal)
 ;;;; END E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
@@ -454,6 +544,22 @@ and then calling `my-dired-kill-spawn' twice."
 (message "[✓]  Commencer DOCUMENTATION")
 ;;;; INFO
 (require 'info+)
+;;; display Info mode buffers in proportional font
+;;; but code examples in monospace font
+(defvar my-rx-info-code (rx bol "     " (* not-newline) eol))
+(defun my-Info-font-lock ()
+  "Use fixed fonts for code examples."
+  (interactive)
+  (require 'org)
+  (font-lock-add-keywords
+   nil
+   `((,my-rx-info-code
+      .
+      ;; let's just use org-block
+      (quote org-block)
+      ))))
+(add-hook 'Info-mode-hook 'my-Info-font-lock)
+(add-hook 'Info-mode-hook 'my-buffer-face-mode-variable)
 ;;;; ELDOC
 (require 'eldoc)
 (require 'css-eldoc)
@@ -482,9 +588,10 @@ and then calling `my-dired-kill-spawn' twice."
       helm-imenu-fuzzy-match    t)
 (add-to-list 'helm-sources-using-default-as-input 'helm-source-man-pages)
 (setq helm-locate-command "mdfind -name %s %s")
-;; helm-flycheck - show flycheck errors
+;; helm-flycheck - show flycheck error2
 (eval-after-load 'flycheck
   '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
+(add-hook 'helm-major-mode-hook 'my-buffer-face-mode-courier)
 ;;;; ................................................................................
 ;;;; litteraire
 ;;;; ................................................................................
@@ -571,7 +678,7 @@ and then calling `my-dired-kill-spawn' twice."
 ;;;; ...............PROG.............................................................
 (message "[✓]  Commencer PROG")
 ;;;; ................................................................................
-;;; compile buffer bury 
+;;; compile buffer bury
 (bury-successful-compilation 1)
 ;;;; MAGIT
 (message "[✓]    MAGIT and GIT")
@@ -812,7 +919,7 @@ and then calling `my-dired-kill-spawn' twice."
 ;;
 (require 'color)
 (message "[✓]      XAH css")
-(defvar xcm-color-names nil "a list of CSS color names.")
+(defvar xcm-color-names nil "A list of CSS color names.")
 (setq xcm-color-names
 '("aliceblue" "antiquewhite" "aqua" "aquamarine" "azure" "beige" "bisque" "black" "blanchedalmond" "blue" "blueviolet" "brown" "burlywood" "cadetblue" "chartreuse" "chocolate" "coral" "cornflowerblue" "cornsilk" "crimson" "cyan" "darkblue" "darkcyan" "darkgoldenrod" "darkgray" "darkgreen" "darkgrey" "darkkhaki" "darkmagenta" "darkolivegreen" "darkorange" "darkorchid" "darkred" "darksalmon" "darkseagreen" "darkslateblue" "darkslategray" "darkslategrey" "darkturquoise" "darkviolet" "deeppink" "deepskyblue" "dimgray" "dimgrey" "dodgerblue" "firebrick" "floralwhite" "forestgreen" "fuchsia" "gainsboro" "ghostwhite" "gold" "goldenrod" "gray" "green" "greenyellow" "grey" "honeydew" "hotpink" "indianred" "indigo" "ivory" "khaki" "lavender" "lavenderblush" "lawngreen" "lemonchiffon" "lightblue" "lightcoral" "lightcyan" "lightgoldenrodyellow" "lightgray" "lightgreen" "lightgrey" "lightpink" "lightsalmon" "lightseagreen" "lightskyblue" "lightslategray" "lightslategrey" "lightsteelblue" "lightyellow" "lime" "limegreen" "linen" "magenta" "maroon" "mediumaquamarine" "mediumblue" "mediumorchid" "mediumpurple" "mediumseagreen" "mediumslateblue" "mediumspringgreen" "mediumturquoise" "mediumvioletred" "midnightblue" "mintcream" "mistyrose" "moccasin" "navajowhite" "navy" "oldlace" "olive" "olivedrab" "orange" "orangered" "orchid" "palegoldenrod" "palegreen" "paleturquoise" "palevioletred" "papayawhip" "peachpuff" "peru" "pink" "plum" "powderblue" "purple" "red" "rosybrown" "royalblue" "saddlebrown" "salmon" "sandybrown" "seagreen" "seashell" "sienna" "silver" "skyblue" "slateblue" "slategray" "slategrey" "snow" "springgreen" "steelblue" "tan" "teal" "thistle" "tomato" "turquoise" "violet" "wheat" "white" "whitesmoke" "yellow" "yellowgreen")
  )
