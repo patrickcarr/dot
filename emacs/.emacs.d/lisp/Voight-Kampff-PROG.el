@@ -50,7 +50,6 @@
 (message "[✓] git-wip and git-wip-timemachine")
 ; projectile
 (projectile-global-mode)
-(global-set-key (kbd "M-<f2>") 'projectile-speedbar-open-current-buffer-in-tree)
 (message "[✓]    Projectile")
 ;;;; REGEX
 (require 'foreign-regexp)
@@ -84,7 +83,6 @@
 ;;cpan RPC::EPC::Service
 (require 'edbi)
 (autoload 'e2wm:dp-edbi "e2wm-edbi" nil t)
-(global-set-key (kbd "s-d") 'e2wm:dp-edbi)
 (message "[✓]    end SQL")
 (message "*****")
 ;; END SQL
@@ -112,7 +110,6 @@
   '(add-to-list 'ac-modes 'slime-repl-mode))
 ;;;; fuzzy
 (require 'slime-fuzzy)
-(global-set-key (kbd "<tab>") 'slime-fuzzy-complete-symbol)
 ;;;; slime-mode hook
 ;; (add-hook 'slime-mode-hook
 ;;           (lambda ()

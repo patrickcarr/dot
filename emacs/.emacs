@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-05-29 10:13:04 cpc26>
+;Time-stamp: <2017-05-29 10:37:49 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -48,6 +48,22 @@
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+;;PROG
+(global-set-key (kbd "M-<f2>") 'projectile-speedbar-open-current-buffer-in-tree)
+(global-set-key (kbd "s-d") 'e2wm:dp-edbi)
+(global-set-key (kbd "<tab>") 'slime-fuzzy-complete-symbol)
+;;UI
+(global-set-key (kbd "C-c t") 'toggle-transparency)
+(global-set-key (kbd "C-c e") 'eval-and-replace)
+(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+(global-set-key (kbd "s-s") 'sr-speedbar-toggle)
+(global-set-key (kbd "C-=") 'er/expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+;;
+(global-set-key (kbd "C-c r r") 'inf-ruby)
 ;;;; ................................................................................
 ;;;; start the server
 ;;;; ................................................................................

@@ -63,7 +63,6 @@
 (require 'robe)
 (add-hook 'ruby-mode-hook 'robe-mode)
 (add-hook 'projectile-mode-hook 'projectile-rails-on)
-(global-set-key (kbd "C-c r r") 'inf-ruby)
 (add-hook 'after-init-hook 'inf-ruby-switch-setup)
 (add-to-list 'auto-mode-alist
              '("\\.\\(?:gemspec\\|irbrc\\|gemrc\\|rake\\|rb\\|ru\\|thor\\)\\'" . ruby-mode))

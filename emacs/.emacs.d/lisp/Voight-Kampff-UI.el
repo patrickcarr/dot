@@ -112,7 +112,6 @@
        100)
       (set-frame-parameter nil 'alpha '(100 100))
     (set-frame-parameter nil 'alpha '(85 50))))
-(global-set-key (kbd "C-c t") 'toggle-transparency)
 ;; Set transparency of emacs
 (defun transparency (value)
   "Set the transparency of the frame window, (VALUE 0=transparent/100=opaque)."
@@ -150,10 +149,10 @@
       (progn
   (require 'mouse)
   (xterm-mouse-mode t)
-  (global-set-key [mouse-4] (lambda ()
+(global-set-key [mouse-4] (lambda ()
                               (interactive)
                               (scroll-down 1)))
-  (global-set-key [mouse-5] (lambda ()
+(global-set-key [mouse-5] (lambda ()
                               (interactive)
                               (scroll-up 1)))
   (defun track-mouse (e))
@@ -235,7 +234,6 @@
              (current-buffer))
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
-(global-set-key (kbd "C-c e") 'eval-and-replace)
 ;;; HELP
 (require 'help+)
 (require 'help-fns+)
@@ -334,10 +332,6 @@
 ;;;; Multiple Cursors
 (message "[✓]  Commencer BUFFERS - multiple cursors")
 (require 'multiple-cursors)
-(global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
-(global-set-key (kbd "C->") 'mc/mark-next-like-this)
-(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
-(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
 ;;;; SR-Speedbar
 (message "[✓]  Commencer SPEEDBAR")
 (which-function-mode 1)
@@ -348,10 +342,8 @@
              '("\\.js" . speedbar-parse-c-or-c++tag))
 (setq speedbar-show-unknown-files t)
 (setq speedbar-directory-unshown-regexp "^$")
-(global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 ;;;; autoexpand
 (require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
 ;;;; // END UI
 ;;;; ESHELL
 (message "[✓]  Commencer ESHELL")
@@ -374,7 +366,6 @@
 (add-to-list 'drag-stuff-except-modes 'org-mode)
 ;;; expand region
 (require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
 ;;;; // END UI
 (provide 'Voight-Kampff-UI)
 ;;; Voight-Kampff-UI.el ends here
