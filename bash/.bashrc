@@ -53,5 +53,5 @@ PERL_MM_OPT="INSTALL_BASE=/Users/cpc26/perl5"; export PERL_MM_OPT;
 # added by Anaconda2 4.3.1 installer
 export PATH="/Users/cpc26/anaconda2/bin:$PATH"
 
-source ~/.xsh
+# source ~/.xsh
 

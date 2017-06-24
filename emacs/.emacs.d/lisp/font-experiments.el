@@ -26,6 +26,7 @@
 ;;; Code:
 ;;;--------------------------------------------------------------------------------
 ;;; FONTS
+;; OSX Default (fontsize . 12) (font . "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
 ;; default font to LispM
 ;;  anciens à l’honneur
 (set-face-attribute 'default nil

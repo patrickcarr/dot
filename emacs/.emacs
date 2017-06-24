@@ -1,14 +1,12 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-05-29 12:02:22 cpc26>
+;Time-stamp: <2017-06-05 22:40:44 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
-(set-face-attribute 'default nil
-                :family "Input Mono" :height 140 :weight 'normal)
-;(fontsize . 14) (font . "-*-Input Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+;;;
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (message "[✓]  Commencer PACKAGE-INIT")
 (package-initialize)
@@ -70,6 +68,55 @@
 ;;;; ................................................................................
 ;;;; start the server
 ;;;; ................................................................................
+;;; SUPER AI HACKS
+(add-to-list 'load-path "/Users/cpc26/tmp/haxen/AI/NClos/nclosemacs")
+(load-library "nclose.el")
+;;; ML superPowers ignited
+;;; FONTS
+(set-face-attribute 'default nil
+		    :family "Input Mono" :height 140 :weight 'normal)
+(set-face-attribute 'fixed-pitch-serif nil
+		    :family "Luxi Mono" :height 150 :weight 'normal)
+(set-face-attribute 'variable-pitch nil
+		    :family "Cardo" :height 160 :weight 'normal)
+;;; org-mode
+(add-hook 'org-mode-hook
+            (lambda ()
+	      (variable-pitch-mode 1)))
+(set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-code nil :inherit 'fixed-pitch)
+(set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+;;;(fontsize . 14) (font . "-*-Input Mono-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1")
+ (defun xah-toggle-read-novel-mode ()
+  "Setup current buffer to be suitable for reading long novel/article text.
+
+• Line wrap at word boundaries.
+• Set a right margin.
+• line spacing is increased.
+• variable width font is used.
+
+Call again to toggle back.
+URL `http://ergoemacs.org/emacs/emacs_novel_reading_mode.html'
+Version 2017-02-27"
+  (interactive)
+  (if (null (get this-command 'state-on-p))
+      (progn
+        (set-window-margins nil 0 9)
+        (variable-pitch-mode 1)
+        (setq line-spacing 0.4)
+        (setq word-wrap t)
+        (put this-command 'state-on-p t))
+    (progn
+      (set-window-margins nil 0 0)
+      (variable-pitch-mode 0)
+      (setq line-spacing nil)
+      (setq word-wrap nil)
+      (put this-command 'state-on-p nil)))
+  (redraw-frame (selected-frame)))
+;;;; END FONTS
+;;;; 
+;;; EMACS SERVER
+;;;;
 (message "[✓]  Commencer SERVER")
 (require 'server)
 (add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)

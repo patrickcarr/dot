@@ -9,7 +9,7 @@ export EDITOR="emacsclient --alternate-editor zile"
 #Java
 export JAVA_HOME=$(/usr/libexec/java_home)
 
-source ~/.xsh
+# source ~/.xsh
 
 
 test -e "${HOME}/.iterm2_shell_integration.bash" && source "${HOME}/.iterm2_shell_integration.bash"
