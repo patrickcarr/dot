@@ -1,5 +1,6 @@
 xterm*selectToClipboard: true
 xterm*visualBell: true
+XTerm.vt100.locale: true
 XTerm*utf8: 1
 XTerm*faceName: Liberation Mono
 XTerm*faceSize: 12

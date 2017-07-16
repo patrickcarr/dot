@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-06-05 22:40:44 cpc26>
+;Time-stamp: <2017-07-16 09:21:07 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -52,9 +52,10 @@
 ;;PROG
 (global-set-key (kbd "M-<f2>") 'projectile-speedbar-open-current-buffer-in-tree)
 (global-set-key (kbd "s-d") 'e2wm:dp-edbi)
-(global-set-key (kbd "<tab>") 'slime-fuzzy-complete-symbol)
 ;;UI
 (global-set-key (kbd "C-c t") 'toggle-transparency)
+(global-set-key (kbd "M-s-†") 'tabbar-mode)
+(global-set-key (kbd "M-s-t") 'tabbar-mode)
 (global-set-key (kbd "C-c e") 'eval-and-replace)
 (global-set-key (kbd "C-S-c C-S-c") 'mc/edit-lines)
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
