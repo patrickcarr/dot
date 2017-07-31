@@ -89,6 +89,8 @@
               ((string-match-p "/.emacs.d/" dir)
                (list ".emacs.d"))
               (t (list dir))))))
+;;; turn off enterprise tabs M-s t to toggle
+(tabbar-mode 0)
 ;;; scratch
 (setq initial-scratch-message nil)
 (setq frame-title-format

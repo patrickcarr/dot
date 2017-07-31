@@ -44,6 +44,8 @@
 ;(global-auto-revert-mode 1)
 ;(setq auto-revert-check-vc-info t)
 (defvar magit-repository-directories '( "~/src" ))
+(global-diff-hl-mode)
+(diff-hl-flydiff-mode 1)
 ;;; GIT-WIP
 (add-to-list 'exec-path "~/opt/git-wip/")
 (load "~/opt/git-wip/emacs/git-wip.el")
