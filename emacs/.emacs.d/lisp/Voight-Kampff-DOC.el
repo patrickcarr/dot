@@ -39,6 +39,7 @@
 (setq org-ellipsis "↴")
 ;; set after so bullets appear
 (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+(setq org-startup-indented t)
 ;; AucTeX
 (message "[✓]  Commencer TEX")
 (defvar TeX-auto-save t)
