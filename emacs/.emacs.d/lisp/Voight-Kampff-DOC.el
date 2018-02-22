@@ -75,11 +75,11 @@
   'org-src-lang-modes '("plantuml" . plantuml))
 ;;;; E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
 ;; Enable plantuml-mode for PlantUML files
-(add-to-list 'auto-mode-alist '("\\.plantuml\\'" . plantuml-mode))
+(add-to-list 'auto-mode-alist '("\\.plantuml$'" . plantuml-mode))
 ;; MD MODE
-(add-to-list 'auto-mode-alist '("\\.markdown\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.md\\'" . markdown-mode))
-(add-to-list 'auto-mode-alist '("README\\.md\\'" . gfm-mode))
+(add-to-list 'auto-mode-alist '("\\.markdown$'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("\\.md$'" . markdown-mode))
+(add-to-list 'auto-mode-alist '("README\\.md$'" . gfm-mode))
 ;;;; REVEAL PRESENTATIONS
 (require 'ox-reveal)
 ;;;; END E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS

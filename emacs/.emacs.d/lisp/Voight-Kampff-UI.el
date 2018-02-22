@@ -341,7 +341,7 @@
 (speedbar-add-supported-extension ".lisp")
 (speedbar-add-supported-extension ".js")
 (add-to-list 'speedbar-fetch-etags-parse-list
-             '("\\.js" . speedbar-parse-c-or-c++tag))
+             '("\\.js$" . speedbar-parse-c-or-c++tag))
 (setq speedbar-show-unknown-files t)
 (setq speedbar-directory-unshown-regexp "^$")
 ;;;; autoexpand

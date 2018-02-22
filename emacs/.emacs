@@ -1,12 +1,13 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2017-07-16 09:21:07 cpc26>
+;Time-stamp: <2018-02-21 22:12:29 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 ;;;
+(setq debug-on-error t)
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (message "[✓]  Commencer PACKAGE-INIT")
 (package-initialize)

@@ -54,6 +54,8 @@
 (projectile-global-mode)
 (message "[✓]    Projectile")
 ;;;; REGEX
+(defvar foreign-regexp/regexp-type nil)
+(defvar foreign-regexp/re-builder/targ-buf-state/\.orig-pt nil)
 (require 'foreign-regexp)
 ;;; TODO  nice feature but byte compile always complains
 (custom-set-variables
@@ -96,6 +98,7 @@
 	      backward-delete-function nil) ; DO NOT expand tabs when deleting
 (c-add-style "my-c-style" '((c-continued-statement-offset 4))) ; If a statement continues on the next line, indent the continuation by 4
 (defun my-c-mode-hook ()
+"An efficient and tasteful C mode."
   (c-set-style "my-c-style")
   (c-set-offset 'substatement-open '0) ; brackets should be at same indentation level as the statements they open
   (c-set-offset 'inline-open '+)
@@ -160,7 +163,7 @@
 (require 'flycheck-demjsonlint)
 (message "[✓]      Start App Dev:: JavaScript-Web")
 ;;;; JS2-MODE
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js$'" . js2-mode))
 (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 (setq ac-js2-evaluate-calls t)
@@ -212,7 +215,7 @@
 (message "[✓]    WEB-MODE")
 ;
 (require 'web-mode)
-(add-to-list 'auto-mode-alist '("\\.phtml\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.phtml$'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.tpl\\.php\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.jsp\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.as[cp]x\\'" . web-mode))
@@ -226,7 +229,7 @@
                          ac-source-html-attribute)))
 ;; engines a-list
 (setq web-mode-engines-alist
-      '(("\\.hbs\\" . "ctemplate"))
+      '(("\\.hbs$" . "ctemplate"))
       )
 ;; hooks and custom for web-mode
 (defun web-mode-hook ()
