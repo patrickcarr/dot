@@ -1,0 +1,5 @@
+* EMACS
+E N T E R P R I S E   _   Q U A L I T Y meets Technolgy.
+#+ATTR_HTML: alt="Replicants are like any other machine, are either a benefit or a hazard."
+[[file:img/emacs.png]]
+** Install
