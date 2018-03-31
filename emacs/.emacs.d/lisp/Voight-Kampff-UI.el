@@ -185,8 +185,9 @@
 (message "[✓]  Commencer FLYCHECK")
 (require 'flycheck)
 (add-hook 'after-init-hook #'global-flycheck-mode)
+(setq flycheck-emacs-lisp-load-path 'inherit )
 ;;;; BOOKMARKS+
-(require 'bookmark+)
+;;(require 'bookmark+)
 ;;;; BUFFERS
 (message "[✓]  Commencer BUFFERS")
 (require 'ibuffer)
@@ -237,12 +238,12 @@
     (error (message "Invalid expression")
            (insert (current-kill 0)))))
 ;;; HELP
-(require 'help+)
-(require 'help-fns+)
-(require 'help-mode+)
+;; (require 'help+)
+;; (require 'help-fns+)
+;; (require 'help-mode+)
 ;;; DIRED
 (message "[✓]  Commencer DIRED et OS X")
-(require 'dired+)
+;(require 'dired+)
 ;; dired avec OSX quiklook
 (require 'dired)
 (require 'cl)

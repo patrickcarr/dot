@@ -121,7 +121,7 @@
 ;;;; COMMON LISP
 (load (expand-file-name "~/quicklisp/slime-helper.el"))
 (setq inferior-lisp-program "/usr/local/bin/sbcl")
-(setq slime-contribs '(slime-fancy))
+(setq slime-contribs '(slime-fancy slime-tramp))
 ;;;; slime-scratch
 (setq slime-scratch-file (expand-file-name "~/.slime/slime-scratch.lisp"))
 ;;;;  slime-auto complete
@@ -149,6 +149,11 @@
 (add-hook 'slime-mode-hook
 	  (lambda ()
 	    (local-set-key (kbd "<tab>") 'slime-fuzzy-complete-symbol)))
+;; abcl from docker because nothing is more enterprise than Docker and Java
+(setq slime-docker-implementations `((abcl ("abcl") :docker-machine "enterprise_lisp")))
+;; (setq slime-lisp-implementations  ; M--M-x slime
+;;       '((sbcl ("/usr/local/bin/sbcl"))
+;; 	(abcl ("docker" "run" "-i" "easye/abcl"))))
 ;;;; CLIPS
 (require 'clips-mode)
 (setq inferior-clips-program "clips")
@@ -397,9 +402,9 @@
 (require 'eclim)
 (setq eclimd-autostart t)
 (custom-set-variables
-  '(eclim-eclipse-dirs '("~/eclipse/java-neon/Eclipse.app/Contents/Eclipse/"))
-  '(eclim-executable "~/eclipse/java-neon/Eclipse.app/Contents/Eclipse/eclim")
-  '(eclimd-default-workspace "~/src/java"))
+  '(eclim-eclipse-dirs '("~/opt/eclipse/jee-oxygen/Eclipse.app/Contents/Eclipse"))
+  '(eclim-executable "~/opt/eclipse/jee-oxygen/Eclipse.app/Contents/Eclipse/eclim")
+  '(eclimd-default-workspace "~/eclipse-workspace"))
 (add-hook 'java-mode-hook 'eclim-mode)
 ;;; Displaying compilation error messages in the echo area
 (setq help-at-pt-display-when-idle t)

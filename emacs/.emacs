@@ -1,13 +1,14 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2018-02-21 22:12:29 cpc26>
+;Time-stamp: <2018-03-23 13:56:39 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
 ;; just comment it out by adding a semicolon to the start of the line.
 ;; You may delete these explanatory comments.
 ;;;
-(setq debug-on-error t)
+;;(setq debug-on-error nil)
+;;(setq debug-on-error t) ; leave it nil for day to day as it is _very_ annoying.
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 (message "[✓]  Commencer PACKAGE-INIT")
 (package-initialize)
@@ -20,6 +21,10 @@
                          ("marmalade" . "https://marmalade-repo.org/packages/")
                          ("melpa" . "https://melpa.org/packages/")
 			 ("org" . "http://orgmode.org/elpa/")))
+(package-initialize)
+(unless package-archive-contents
+  (package-refresh-contents))
+(package-install-selected-packages)
 ;;; Code:
 ;; OS FIXES
 (require 'Voight-Kampff-OS)
@@ -39,7 +44,7 @@
 ;;;; ................................................................................
 ;;;; INPUT AND KEYBINDINGS
 ;;;; ................................................................................
-(message "[✓]  Commencer Keybindings")
+(message "[✓]   Commencer Keybindings")
 ;;;; Keybindings
 (global-set-key "\M-v" 'golden-ratio-scroll-screen-down)
 (global-set-key "\C-v" 'golden-ratio-scroll-screen-up)
@@ -71,6 +76,7 @@
 ;;;; start the server
 ;;;; ................................................................................
 ;;; SUPER AI HACKS
+(message "[✓]   SUPER AI HACKS")
 (add-to-list 'load-path "/Users/cpc26/tmp/haxen/AI/NClos/nclosemacs")
 (load-library "nclose.el")
 ;;; ML superPowers ignited

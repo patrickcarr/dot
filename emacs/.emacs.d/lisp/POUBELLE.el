@@ -79,6 +79,11 @@
 ;;(autoload 'puppet-mode "puppet-mode" "Major mode for editing puppet manifests")
 ;(add-to-list 'auto-mode-alist '("\\.pp$" . puppet-mode))
 (message "[✓]    End Puppet")
+(message "[✓]    Start AWS")
+;; (require 'flymake-json)
+;; (add-hook 'json-mode 'flymake-json-load)
+;; (global-set-key (kbd "C-c j v") 'flymake-json-load)
+(add-to-list 'auto-mode-alist '("\\.template\\'" . json-mode))
 ;;;; end tech poubelle
 ;;;;
 (provide 'POUBELLE)

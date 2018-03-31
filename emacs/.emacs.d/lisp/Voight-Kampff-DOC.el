@@ -88,7 +88,7 @@
 ;;; info et doc
 (message "[✓]  Commencer DOCUMENTATION")
 ;;;; INFO
-(require 'info+)
+;;(require 'info+)
 ;;;; ELDOC
 (require 'eldoc)
 (require 'css-eldoc)
