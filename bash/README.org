@@ -1,4 +1,4 @@
-* GNU SCREEN
+* GNU BASH
 BASH is that robot you wished you owned.  It does  extraordinary things. Revel in your time!
 #+ATTR_HTML: alt="We're not computers, Sebastian, we're physical."
 [[file:img/bash.png]]
