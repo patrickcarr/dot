@@ -1,4 +1,6 @@
 # Colin Carr
+# Fix for residual text
+altscreen on
 startup_message off
 autodetach on
 shell -$SHELL
@@ -8,10 +10,26 @@ escape ``
 # bell
 vbell on
 vbell_msg "    Woot ----- Woot!   "
+
+# Enables use of shift-PgUp and shift-PgDn
+termcapinfo xterm|xterms|xs|rxvt ti@:te@
+
+# Enable 256 color term
+term xterm-color
+
+hardstatus on
+hardstatus alwayslastline
+#hardstatus string "%{.kW}%-w%{.W}%n %t%{-}%{=b kw}%?%+w%? %=%c %d/%m/%Y" #B&W & date&time
 # status line and key bindings from Brad Sims 2004
-hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "
+#hardstatus alwayslastline "%{=b}%{G} Screen(s): %{b}%w %=%{kG}%C%A  %D, %M/%d/%Y "
+
 #hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %d/%m%{W}%c %{g}]'
-#hardstatus string '%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{=b kR}(%{W}%n*%f %t%?(%u)%?%{=b kR})%{= kw}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{=b C}[ %m/%d %c ]%{W}'
+
+hardstatus string '%{gk}[ %{G}%H %{g}][%= %{wk}%?%-Lw%?%{=b kR}(%{W}%n*%f %t%?(%u)%?%{=b kR})%{= kw}%?%+Lw%?%?%= %{g}][%{Y}%l%{g}]%{=b C}[ %m/%d %c ]%{W}'
+
+# hard copy
+hardcopydir ~/.screen
+
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
 
 ##    Keybindings    ##
@@ -30,3 +48,14 @@ bindkey -k F1 prev
 bindkey -k F2 next
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
+
+
+# programs to autostart on screen startup
+# screen -t htop 0 htop
+# screen -t bash 1 
+# screen -t bash 2
+# screen -t log 3
+# stuff "tail -f /var/log/system.log\012"
+# screen -t mc 4
+# stuff "mc ~/ ~/Downloads\012"
+# select 1
