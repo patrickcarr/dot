@@ -413,6 +413,12 @@
 ;; add the emacs-eclim source
 ;(require 'ac-emacs-eclim-source)
 (ac-emacs-eclim-config)
+;;; YAS-SNIPPETS
+;; (require 'yasnippet)
+;; (defvar yas-snippet-dirs nil)
+;; (setq yas-snippet-dirs '("~/.emacs.d/snippets"))
+;; (yas-reload-all)
+;; (add-hook 'prog-mode-hook #'yas-minor-mode)
 ;;;; ................................................................................
 ;;;; END PROG
 ;;;; ................................................................................

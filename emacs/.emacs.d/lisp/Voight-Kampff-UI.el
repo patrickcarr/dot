@@ -332,10 +332,21 @@
   (define-key dired-mode-map [down] 'my-dired-next-line)
   (define-key dired-mode-map [up] 'my-dired-previous-line)
   (define-key dired-mode-map (kbd "SPC") 'my-dired-quicklook)))
+;;;; TREEMACS
+(message "[✓]  Commencer TREEMACS - file and project explorer")
+(setq treemacs-use-follow-mode t)
+(setq treemacs-use-filewatch-mode t)
+(defun treemacs-header-with-brackets (current-root)
+  "Brackets around the CURRENT-ROOT directory name."
+  (format "<%s>" (file-name-nondirectory current-root)))
+(setq treemacs-header-function #'treemacs-header-with-brackets)
+(setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+(setq treemacs-git-mode 'extended)
 ;;;; Multiple Cursors
 (message "[✓]  Commencer BUFFERS - multiple cursors")
 (require 'multiple-cursors)
 ;;;; SR-Speedbar
+;;;; Using treemacs instead being evaluated
 (message "[✓]  Commencer SPEEDBAR")
 (which-function-mode 1)
 (require 'sr-speedbar)
