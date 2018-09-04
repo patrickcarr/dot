@@ -96,7 +96,9 @@
 (add-hook 'lisp-interaction-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'ielm-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'css-mode-hook 'turn-on-css-eldoc)
-;(add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
+;;;(add-hook 'js-mode-hook 'turn-on-javascript-eldoc)
+;;;  interface for IETF RFC document.
+(setq irfc-assoc-mode t)
 ;;;; END DOCUMENTATION
 ;;; HELM
 ;;;; ................................................................................

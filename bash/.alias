@@ -1,0 +1,1 @@
+rm = shred -vfz -n 10; srm -D -v
