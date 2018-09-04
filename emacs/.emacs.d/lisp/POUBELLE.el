@@ -84,6 +84,15 @@
 ;; (add-hook 'json-mode 'flymake-json-load)
 ;; (global-set-key (kbd "C-c j v") 'flymake-json-load)
 (add-to-list 'auto-mode-alist '("\\.template\\'" . json-mode))
+;;; Python
+(elpy-enable)
+(when (require 'flycheck nil t)
+  (setq elpy-modules (delq 'elpy-module-flymake elpy-modules))
+  (add-hook 'elpy-mode-hook 'flycheck-mode))
+(require 'py-autopep8)
+(add-hook 'elpy-mode-hook 'py-autopep8-enable-on-save)
+(setq python-shell-interpreter "ipython"
+      python-shell-interpreter-args "-i --simple-prompt")
 ;;;; end tech poubelle
 ;;;;
 (provide 'POUBELLE)
