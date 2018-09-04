@@ -106,6 +106,7 @@
 ;; http://tuhdo.github.io/helm-intro.html
 (setq locate-command "mdfind")
 (require 'helm-config)
+(setq helm-split-window-inside-p t)
 (when (executable-find "curl")
   (setq helm-google-suggest-use-curl-p t))
 (helm-mode 1)

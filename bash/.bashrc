@@ -1,4 +1,4 @@
-#add $HOME/bin in front
+#Add $HOME/bin in front
 export PATH="${HOME}/bin:${PATH}"
 test -r /sw/bin/init.sh && . /sw/bin/init.sh
 export CFLAGS=-I/sw/include 

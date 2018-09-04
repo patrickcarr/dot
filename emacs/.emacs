@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2018-03-31 10:30:47 cpc26>
+;Time-stamp: <2018-09-03 12:31:13 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -70,6 +70,7 @@
 (global-set-key (kbd "s-s") 'sr-speedbar-toggle)
 (global-set-key (kbd "C-=") 'er/expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+(define-key origami-mode-map [C-tab] 'origami-recursively-toggle-node)
 ;;
 (global-set-key (kbd "C-c r r") 'inf-ruby)
 ;;;; ................................................................................

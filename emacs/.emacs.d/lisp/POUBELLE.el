@@ -54,6 +54,8 @@
 (require 'flycheck-yamllint)
 (eval-after-load 'flycheck
   '(add-hook 'flycheck-mode-hook 'flycheck-yamllint-setup))
+(require 'origami)
+(global-origami-mode t)
 ;;; ansible
 (message "[✓]    Start Ansible")
 (add-hook 'yaml-mode-hook #'ansible-doc-mode)

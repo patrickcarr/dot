@@ -186,9 +186,22 @@
                            (tern-mode)))
 (message "[✓]      Start App Dev:: JavaScript::JSLint")
 (require 'flymake-easy)
-(require 'flymake-jslint)
-(add-hook 'js-mode-hook 'flymake-jslint-load)
-(add-hook 'js2-mode-hook 'flymake-jslint-load)
+;; (require 'flymake-jslint)
+;; (add-hook 'js-mode-hook 'flymake-jslint-load)
+;; (add-hook 'js2-mode-hook 'flymake-jslint-load)
+(require 'flycheck)
+;; disable jshint since we prefer eslint checking
+;; (setq-default flycheck-disabled-checkers
+;;   (append flycheck-disabled-checkers
+;;     '(javascript-jshint)))
+;; ;; use eslint with web-mode for jsx files
+;; (flycheck-add-mode 'javascript-eslint 'js2-mode)
+;; ;; customize flycheck temp file prefix
+;; (setq-default flycheck-temp-prefix ".flycheck")
+;; ;; disable json-jsonlist checking for json files
+;; (setq-default flycheck-disabled-checkers
+;;   (append flycheck-disabled-checkers
+;;     '(json-jsonlist)))
 ;;; JS2-REFACTOR
 (message "[✓]    JS2-REFACTOR")
 (require 'js2-refactor)
@@ -229,6 +242,7 @@
 (add-to-list 'auto-mode-alist '("\\.html?\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.djhtml\\'" . web-mode))
 (add-to-list 'auto-mode-alist '("\\.hbs\\'" . web-mode))
+(add-to-list 'auto-mode-alist '("\\.jsx$" . web-mode))
 (add-to-list 'web-mode-ac-sources-alist
              '("html" . (ac-source-html-tag
                          ac-source-html-attribute)))

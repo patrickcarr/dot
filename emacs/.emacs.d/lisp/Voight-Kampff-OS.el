@@ -26,10 +26,10 @@
 ;;; Code:
 ;;; ................................................................................
 (message "[✓]  Commencer OS FIXES")
-(when (memq window-system '(mac ns))
-  (exec-path-from-shell-initialize))
-(let ((default-directory  "~/.emacs.d/lisp/"))
-  (normal-top-level-add-subdirs-to-load-path))
+;; (when (memq window-system '(mac ns))
+;;   (exec-path-from-shell-initialize))
+;; (let ((default-directory  "~/.emacs.d/lisp/"))
+;;   (normal-top-level-add-subdirs-to-load-path))
 (message "[✓]  OS X")
 ;;launchctl-el
 ;; Emacs recognize plist files as XML files:
