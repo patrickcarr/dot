@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2018-09-03 12:31:13 cpc26>
+;Time-stamp: <2018-09-03 21:49:24 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -126,6 +126,8 @@ Version 2017-02-27"
 ;;;; 
 ;;; EMACS SERVER
 ;;;;
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
 (message "[✓]  Commencer SERVER")
 (require 'server)
 (add-hook 'after-make-frame-functions 'cpc26/xmouse-enable)
@@ -133,6 +135,4 @@ Version 2017-02-27"
 ;;
 (provide '.emacs)
 ;;; .emacs ends here
-(put 'downcase-region 'disabled nil)
 (message "[✓]  Commencer EMACS")
-(put 'upcase-region 'disabled nil)

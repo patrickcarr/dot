@@ -334,13 +334,17 @@
   (define-key dired-mode-map (kbd "SPC") 'my-dired-quicklook)))
 ;;;; TREEMACS
 (message "[✓]  Commencer TREEMACS - file and project explorer")
+(defvar treemacs-use-follow-mode)
 (setq treemacs-use-follow-mode t)
+(defvar treemacs-use-filewatch-mode)
 (setq treemacs-use-filewatch-mode t)
 (defun treemacs-header-with-brackets (current-root)
   "Brackets around the CURRENT-ROOT directory name."
   (format "<%s>" (file-name-nondirectory current-root)))
+(defvar treemacs-header-function)
 (setq treemacs-header-function #'treemacs-header-with-brackets)
 (setq-local imenu-create-index-function #'ggtags-build-imenu-index)
+(defvar treemacs-git-mode)
 (setq treemacs-git-mode 'extended)
 ;;;; Multiple Cursors
 (message "[✓]  Commencer BUFFERS - multiple cursors")
@@ -377,6 +381,7 @@
 ;;; DRAG STUFF
 (drag-stuff-global-mode 1)
 (drag-stuff-define-keys)
+(defvar drag-stuff-except-modes)
 (add-to-list 'drag-stuff-except-modes 'org-mode)
 ;;; expand region
 (require 'expand-region)
