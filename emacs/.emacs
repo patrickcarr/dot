@@ -1,6 +1,6 @@
 ;;; package --- .emacs
 ;Copyright (C) 2015 by Patrick Carr
-;Time-stamp: <2018-09-03 21:49:24 cpc26>
+;Time-stamp: <2018-10-13 08:08:49 cpc26>
 ;;; Commentary:
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -45,6 +45,8 @@
 ;;;; INPUT AND KEYBINDINGS
 ;;;; ................................................................................
 (message "[✓]   Commencer Keybindings")
+(setq mac-option-modifier 'meta)
+(setq mac-right-option-modifier nil)
 ;;;; Keybindings
 (global-set-key "\M-v" 'golden-ratio-scroll-screen-down)
 (global-set-key "\C-v" 'golden-ratio-scroll-screen-up)

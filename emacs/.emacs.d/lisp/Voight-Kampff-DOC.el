@@ -42,6 +42,9 @@
 (setq org-startup-indented t)
 ;; AucTeX
 (message "[✓]  Commencer TEX")
+(let ((my-path (expand-file-name "/usr/local/bin:/usr/local/texlive/2018/bin/x86_64-darwin")))
+(setenv "PATH" (concat my-path ":" (getenv "PATH")))
+(add-to-list 'exec-path my-path))
 (defvar TeX-auto-save t)
 (defvar TeX-parse-self t)
 (setq-default TeX-master nil)
@@ -54,6 +57,12 @@
 ;; Use Skim as viewer, enable source <-> PDF sync
 ;; make latexmk available via C-c C-c
 ;; Note: SyncTeX is setup via ~/.latexmkrc (see below)
+;; (add-hook 'LaTeX-mode-hook
+;; (lambda ()
+;;   (push
+;;    '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
+;;      :help "Run latexmk on file")
+;;     TeX-command-list)))
 (add-hook 'LaTeX-mode-hook (lambda ()
   (push
     '("latexmk" "latexmk -pdf %s" TeX-run-TeX nil t
@@ -68,7 +77,16 @@
 ;; option -b highlights the current line; option -g opens Skim in the background
 (defvar TeX-view-program-selection '((output-pdf "PDF Viewer")))
 (defvar TeX-view-program-list
-      '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+  '(("PDF Viewer" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+;; Open Skim -> Preferences -> Sync
+;; Preset: Emacs
+;; Command: /usr/local/bin/emacsclient
+;; Arguments: --no-wait +%line "%file"
+(custom-set-variables
+     '(TeX-source-correlate-method 'synctex)
+     '(TeX-source-correlate-mode t)
+     '(TeX-source-correlate-start-server t))
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;; UML  E N T E R P R I S E  Q U A L I T Y COMMUNICATIONS
 ;;;; ................................................................................
 (add-to-list
