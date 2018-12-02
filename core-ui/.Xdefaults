@@ -1,4 +1,8 @@
 xterm*selectToClipboard: true
+xterm*VT100.Translations: #override \
+                 Shift <Key>Insert:    insert-selection(SELECT) \n\
+                 Ctrl Shift <Key>V:    insert-selection(SELECT) \n\
+                 Ctrl Shift <Key>C:    copy-selection(SELECT)
 xterm*visualBell: true
 XTerm.vt100.locale: true
 XTerm*utf8: 1
