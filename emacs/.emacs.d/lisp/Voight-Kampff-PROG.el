@@ -24,18 +24,39 @@
 ;;
 
 ;;; Code:
+(message "[✓]  ........................................")
+(message "[✓]  Commencer PROG")
 (message "[✓]  Commencer DevOps")
 (require 'generic-x)
 ; NGINX
 (require 'nginx-mode)
 (add-to-list 'auto-mode-alist '("/nginx/sites-\\(?:available\\|enabled\\)/" . nginx-mode))
 (message "[✓]    NGINX")
+(require 'awscli-capf)
+(add-hook 'shell-mode-hook (lambda ()
+			     (add-to-list 'completion-at-point-functions 'awscli-capf)))
+(message "[✓]    AWS")
 ;;;;
 ;;;; ................................................................................
 ;;;;
 ;;;; ...............PROG.............................................................
 (message "[✓]  Commencer PROG")
 ;;;; ................................................................................
+;;; LSP
+(require 'lsp-mode)
+(require 'lsp-ui)
+(setq lsp-ui-sideline-update-mode 'point)
+(add-hook 'lsp-mode-hook 'lsp-ui-mode)
+;;(add-hook 'js2-mode-hook 'flycheck-mode)
+(require 'company-lsp)
+(push 'company-lsp company-backends)
+(lsp-treemacs-sync-mode 1)
+(add-hook 'js2-mode-hook #'lsp)
+(add-hook 'javaScript-mode-hook #'lsp)
+(add-hook 'css-mode-hook #'lsp)
+(add-hook 'sh-mode-hook #'lsp)
+(add-hook 'dockerfile-mode-hook #'lsp)
+(add-hook 'web-mode-hook #'lsp)
 ;;; compile buffer bury
 (bury-successful-compilation 1)
 ;;;; MAGIT
@@ -64,6 +85,7 @@
                                        ;; 'python.
    '(reb-re-syntax 'foreign-regexp))   ;; Tell re-builder to use foreign regexp.
 ;;; flyspell-prog
+(setq ispell-program-name "/opt/local/bin/ispell")
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 (message "[✓]    flyspell-prog-mode")
 ;;; rainbow delimeters
@@ -119,19 +141,19 @@
 (eval-after-load "auto-complete"
   '(add-to-list 'ac-modes 'geiser-repl-mode))
 ;;;; COMMON LISP
-(load (expand-file-name "~/quicklisp/slime-helper.el"))
-(setq inferior-lisp-program "/usr/local/bin/sbcl")
-(setq slime-contribs '(slime-fancy slime-tramp))
-;;;; slime-scratch
-(setq slime-scratch-file (expand-file-name "~/.slime/slime-scratch.lisp"))
-;;;;  slime-auto complete
-(require 'ac-slime)
-(add-hook 'slime-mode-hook 'set-up-slime-ac)
-(add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
-(eval-after-load "auto-complete"
-  '(add-to-list 'ac-modes 'slime-repl-mode))
-;;;; fuzzy
-(require 'slime-fuzzy)
+;; (load (expand-file-name "~/quicklisp/slime-helper.el"))
+;; (setq inferior-lisp-program "/usr/local/bin/sbcl")
+;; (setq slime-contribs '(slime-fancy slime-tramp))
+;; ;;;; slime-scratch
+;; (setq slime-scratch-file (expand-file-name "~/.slime/slime-scratch.lisp"))
+;; ;;;;  slime-auto complete
+;; (require 'ac-slime)
+;; (add-hook 'slime-mode-hook 'set-up-slime-ac)
+;; (add-hook 'slime-repl-mode-hook 'set-up-slime-ac)
+;; (eval-after-load "auto-complete"
+;;   '(add-to-list 'ac-modes 'slime-repl-mode))
+;; ;;;; fuzzy
+;; (require 'slime-fuzzy)
 ;;;; slime-mode hook
 ;; (add-hook 'slime-mode-hook
 ;;           (lambda ()
@@ -168,7 +190,7 @@
 (require 'flycheck-demjsonlint)
 (message "[✓]      Start App Dev:: JavaScript-Web")
 ;;;; JS2-MODE
-(add-to-list 'auto-mode-alist '("\\.js$'" . js2-mode))
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 (add-hook 'js2-mode-hook 'js2-imenu-extras-mode)
 (add-hook 'js2-mode-hook 'ac-js2-mode)
 (setq ac-js2-evaluate-calls t)
@@ -182,8 +204,8 @@
 ;;     (js2-highlight-vars-mode))
 (eval-after-load "js2-highlight-vars-autoloads"
   '(add-hook 'js2-mode-hook (lambda () (js2-highlight-vars-mode))))
-(add-hook 'js2-mode-hook (lambda ()
-                           (tern-mode)))
+;; (add-hook 'js2-mode-hook (lambda ()
+;;                            (tern-mode)))
 (message "[✓]      Start App Dev:: JavaScript::JSLint")
 (require 'flymake-easy)
 ;; (require 'flymake-jslint)
@@ -218,15 +240,15 @@
 ;; (define-key js2-mode-map "{" 'paredit-open-curly)
 ;; (define-key js2-mode-map "}" 'paredit-close-curly-and-newline)
 ;;;; Tern
-(add-to-list 'load-path "~/opt/tern/emacs")
-(autoload 'tern-mode "tern.el" nil t)
-(add-hook 'js-mode-hook (lambda () (tern-mode t)))
-(add-hook 'js2-mode-hook (lambda () (tern-mode t)))
-;(define-key tern-mode-keymap [(control ?c) (control ?t)] 'tern-get-type)
-(eval-after-load 'tern
-   '(progn
-      (require 'tern-auto-complete)
-      (tern-ac-setup)))
+;; (add-to-list 'load-path "~/opt/tern/emacs")
+;; (autoload 'tern-mode "tern.el" nil t)
+;; (add-hook 'js-mode-hook (lambda () (tern-mode t)))
+;; (add-hook 'js2-mode-hook (lambda () (tern-mode t)))
+;; ;(define-key tern-mode-keymap [(control ?c) (control ?t)] 'tern-get-type)
+;; (eval-after-load 'tern
+;;    '(progn
+;;       (require 'tern-auto-complete)
+;;       (tern-ac-setup)))
 ;;;; ................................................................................
 ;;;; JS related DOM and WEB
 ;;;; WEB MODE
@@ -413,20 +435,23 @@
 ;;;; ................................................................................
 (message "[✓]  Commencer E N T E R P R I S E  Q U A L I T Y")
 ;;;; ................................................................................
-(require 'eclim)
-(setq eclimd-autostart t)
-(custom-set-variables
-  '(eclim-eclipse-dirs '("~/opt/eclipse/jee-oxygen/Eclipse.app/Contents/Eclipse"))
-  '(eclim-executable "~/opt/eclipse/jee-oxygen/Eclipse.app/Contents/Eclipse/eclim")
-  '(eclimd-default-workspace "~/eclipse-workspace"))
-(add-hook 'java-mode-hook 'eclim-mode)
-;;; Displaying compilation error messages in the echo area
-(setq help-at-pt-display-when-idle t)
-(setq help-at-pt-timer-delay 0.1)
-(help-at-pt-set-timer)
-;; add the emacs-eclim source
-;(require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)
+;; (require 'eclim)
+;; (setq eclimd-autostart t)
+;; (custom-set-variables
+;;   '(eclim-eclipse-dirs '("~/opt/eclipse/jee-oxygen/Eclipse.app/Contents/Eclipse"))
+;;   '(eclim-executable "~/opt/eclipse/jee-oxygen/Eclipse.app/Contents/Eclipse/eclim")
+;;   '(eclimd-default-workspace "~/eclipse-workspace"))
+;; (add-hook 'java-mode-hook 'eclim-mode)
+;; ;;; Displaying compilation error messages in the echo area
+;; (setq help-at-pt-display-when-idle t)
+;; (setq help-at-pt-timer-delay 0.1)
+;; (help-at-pt-set-timer)
+;; ;; add the emacs-eclim source
+;; ;(require 'ac-emacs-eclim-source)
+;; (ac-emacs-eclim-config)
+;;; J A V A
+(require 'lsp-java)
+(add-hook 'java-mode-hook #'lsp)
 ;;; YAS-SNIPPETS
 ;; (require 'yasnippet)
 ;; (defvar yas-snippet-dirs nil)
@@ -434,6 +459,8 @@
 ;; (yas-reload-all)
 ;; (add-hook 'prog-mode-hook #'yas-minor-mode)
 ;;;; ................................................................................
+(message "[✓]  END PROG")
+(message "[✓]  ........................................")
 ;;;; END PROG
 ;;;; ................................................................................
 
